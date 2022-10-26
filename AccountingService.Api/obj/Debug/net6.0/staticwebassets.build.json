@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "RHxEYaqxfPjsSPmiwhIar9w6EO/oK6jvu6VT+cPPOWk=",
+  "Source": "AccountingService.Api",
+  "BasePath": "_content/AccountingService.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
