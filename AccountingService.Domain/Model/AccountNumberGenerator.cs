@@ -4,18 +4,25 @@ public class AccountNumberGenerator
 {
     private static string Number { get; set; }
 
-    public static int GetAccountNumber()
+    public static string GetAccountNumber()
     {
-        string NumberBeforeDigit = Number.Split('-')[0];
+        string numberBeforeDigit = Number.Split('-')[0];
 
         int[] multipliers = { 7, 6, 5, 4, 3, 2 };
+        string[] listOfNumbers = numberBeforeDigit.Split();
         
-        int AccountDigit;
+        int accountDigit = 0;
         
         for (int i = 0; i <= 5; i++)
         {
-            AccountDigit += multipliers[i] * 
+            accountDigit += multipliers[i] * int.Parse(listOfNumbers[i]);
         }
+
+        if (accountDigit == 1)
+            accountDigit = 0;
+
+        Number = ((numberBeforeDigit) + 1).ToString() + '-' + accountDigit; 
+        
         return Number;
     }
 }
