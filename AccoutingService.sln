@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountingService.Api", "Ac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountingService.Domain", "AccountingService.Domain\AccountingService.Domain.csproj", "{956E2371-E705-47BE-A8A7-03669C41BA01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountingService.Repository", "AccountingService.Repository\AccountingService.Repository.csproj", "{9E32BE0E-FE31-4AD5-8E1A-A45B5676D813}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,10 @@ Global
 		{956E2371-E705-47BE-A8A7-03669C41BA01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{956E2371-E705-47BE-A8A7-03669C41BA01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{956E2371-E705-47BE-A8A7-03669C41BA01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E32BE0E-FE31-4AD5-8E1A-A45B5676D813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E32BE0E-FE31-4AD5-8E1A-A45B5676D813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E32BE0E-FE31-4AD5-8E1A-A45B5676D813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E32BE0E-FE31-4AD5-8E1A-A45B5676D813}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
