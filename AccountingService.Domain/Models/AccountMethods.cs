@@ -10,9 +10,9 @@ public class AccountNumberGenerator
 
         int[] multipliers = { 7, 6, 5, 4, 3, 2 };
         char[] listOfNumbers = numberBeforeDigit.ToCharArray();
-        
+
         int accountDigit = 0;
-        
+
         for (int i = 0; i <= 5; i++)
         {
             accountDigit += multipliers[i] * int.Parse(listOfNumbers[i].ToString());
@@ -21,8 +21,19 @@ public class AccountNumberGenerator
         if (accountDigit == 1)
             accountDigit = 0;
 
-        Number = ((numberBeforeDigit) + 1).ToString() + '-' + accountDigit; 
-        
+        Number = (numberBeforeDigit).ToString() + '-' + accountDigit;
+
         return Number;
+    }
+}
+
+public static class IdIncrementer
+{
+    private static int Id { get; set; }
+    
+    public static int GetNextId()
+    {
+        Id++;
+        return Id;
     }
 }

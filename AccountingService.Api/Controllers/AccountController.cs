@@ -20,9 +20,14 @@ namespace AccountingService.Api.Controllers
 
         // GET: api/Account
         [HttpGet]
-        public IEnumerable<string> GetAccount()
+        public ActionResult<List<Account>> GetAllAccounts()
         {
-            return new string[] { "value1", "value2" };
+            if (AccountList.IsEmptyTodoItems())
+            {
+                return NoContent();
+            }
+
+            return Ok(AccountList.Accounts);
         }
 
         // GET: api/Account/5

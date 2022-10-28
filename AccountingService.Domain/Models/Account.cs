@@ -20,6 +20,7 @@ public class Account
     public Account(string document, string agency, DateOnly? closingDate = null, bool status = true)
 
     {
+        Id = IdIncrementer.GetNextId();
         Agency = agency;
         Number = AccountNumberGenerator.GetAccountNumber(Id);
         Amount = 0;
