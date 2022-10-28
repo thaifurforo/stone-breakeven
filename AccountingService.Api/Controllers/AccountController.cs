@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AccountingService.Api.Contracts.v1.Requests;
+using AccountingService.Api.Contracts.v1.Response;
 using AccountingService.Domain.Model;
 using AccountingService.Repository;
 using Microsoft.AspNetCore.Http;
@@ -39,13 +41,21 @@ namespace AccountingService.Api.Controllers
 
         // POST: api/Account
         [HttpPost]
-        public async Task<ActionResult<Account>> PostAccountItem(Account account)
+        public IActionResult CreateToDo([FromBody] CreateAccountRequest request)
         {
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
+            try
+            {
+                request.Validate();
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetAccount), new { id = account.Id }, account);
+                var todo = new Account(request.Document, request.Agency);
+                AccountList.Accounts.Add(todo);
+
+                return Ok(todo);
+            }
+            catch(BadHttpRequestException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // PUT: api/Account/5

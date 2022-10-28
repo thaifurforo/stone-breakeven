@@ -11,5 +11,6 @@ public class ReadModelContext : DbContext
     }
     
     public DbSet<Account> Accounts { get; set; } = null!;
-
+    
+    
 }
