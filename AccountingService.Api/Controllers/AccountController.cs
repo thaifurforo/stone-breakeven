@@ -1,6 +1,6 @@
 using AccountingService.Api.Contracts.v1.Requests;
 using AccountingService.Api.Contracts.v1.Response;
-using AccountingService.Domain.Model;
+using AccountingService.Domain.Models;
 using AccountingService.Repository;
 using Microsoft.AspNetCore.Mvc;
 

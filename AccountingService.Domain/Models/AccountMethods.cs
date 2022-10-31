@@ -1,4 +1,4 @@
-namespace AccountingService.Domain.Model;
+namespace AccountingService.Domain.Models;
 
 
 public partial class Account
@@ -20,7 +20,7 @@ public partial class Account
         if (accountDigit == 1)
             accountDigit = 0;
 
-        Number = (numberBeforeDigit).ToString() + '-' + accountDigit;
+        Number = numberBeforeDigit + '-' + accountDigit;
 
         return Number;
     }

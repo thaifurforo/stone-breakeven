@@ -1,4 +1,4 @@
-﻿using AccountingService.Domain.Model;
+﻿using AccountingService.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Repository;

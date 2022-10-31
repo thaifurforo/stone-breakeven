@@ -1,4 +1,4 @@
-using AccountingService.Domain.Model;
+using AccountingService.Domain.Models;
 
 namespace AccountingService.Api.Contracts.v1.Response;
 

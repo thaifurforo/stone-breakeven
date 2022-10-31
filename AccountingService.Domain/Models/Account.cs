@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using DateOnlyTimeOnly.AspNet.Converters;
 
-namespace AccountingService.Domain.Model;
+namespace AccountingService.Domain.Models;
 
 public partial class Account
 {
