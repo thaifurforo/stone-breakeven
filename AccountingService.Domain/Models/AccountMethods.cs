@@ -24,11 +24,5 @@ public partial class Account
 
         return Number;
     }
-    
-    public int GetNextId()
-    {
-        Id++;
-        return Id;
-    }
 
 }
