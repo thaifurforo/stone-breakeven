@@ -20,7 +20,7 @@ namespace AccountingService.Api.Controllers
 
         // GET: api/Account
         [HttpGet]
-        public ActionResult<List<Account>> GetAllAccounts()
+        public async Task<ActionResult<List<Account>>> GetAllAccounts()
         {
             if (AccountList.IsEmptyAccounts())
             {
@@ -34,19 +34,19 @@ namespace AccountingService.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Account>> GetAccount(int id)
         {
-            var result = AccountList.Accounts.Find(account => account.Id == id);
+            var account = AccountList.Accounts.Find(account => account.Id == id);
 
-            if (result is null)
+            if (account is null)
             {
                 return NotFound(new { message = "The given Id does not exist in the Accounts List." });
             }
 
-            return Ok(result);
+            return Ok(account);
         }
 
         // POST: api/Account
         [HttpPost]
-        public IActionResult CreateAccount([FromBody] CreateAccountRequest request)
+        public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request)
         {
             try
             {
@@ -63,8 +63,8 @@ namespace AccountingService.Api.Controllers
             }
         }
 
-        // PUT: api/Account/5/deactivate
-        [HttpPut("{id}/deactivate")]
+        // POST: api/Account/5/deactivate
+        [HttpPost("{id}/deactivate")]
         public async Task<IActionResult> PutAccount(int id)
         {
             try
@@ -86,12 +86,6 @@ namespace AccountingService.Api.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
-        }
-
-        // DELETE: api/Account/5
-        [HttpDelete("{id}")]
-        public void DeleteAccount(int id)
-        {
         }
     }
 }
