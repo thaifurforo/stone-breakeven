@@ -4,25 +4,28 @@ using DateOnlyTimeOnly.AspNet.Converters;
 
 namespace AccountingService.Domain.Model;
 
-public class Account
+public partial class Account
 {
-    public int Id { get; set; }
-    public string Number { get; set; }
+    public static int Id { get; set; }
+    public static string Number { get; set; }
     public string Agency { get; set; }
     public decimal Amount { get; set; }
     public bool Status { get; set; }
+
     [JsonConverter(typeof(DateOnlyJsonConverter))]
     public DateOnly OpeningDate { get; set; }
+
     [JsonConverter(typeof(DateOnlyJsonConverter))]
     public DateOnly? ClosingDate { get; set; }
-    public string Document { get; set;  }
+
+    public string Document { get; set; }
 
     public Account(string document, string agency, DateOnly? closingDate = null, bool status = true)
 
     {
-        Id = IdIncrementer.GetNextId();
+        Id = GetNextId();
         Agency = agency;
-        Number = AccountNumberGenerator.GetAccountNumber(Id);
+        Number = GetAccountNumber(Id);
         Amount = 0;
         Status = status;
         OpeningDate = DateOnly.FromDateTime(DateTime.Now);
@@ -31,3 +34,4 @@ public class Account
     }
     
 }
+    

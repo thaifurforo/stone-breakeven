@@ -1,9 +1,8 @@
 namespace AccountingService.Domain.Model;
 
-public class AccountNumberGenerator
-{
-    private static string Number { get; set; }
 
+public partial class Account
+{
     public static string GetAccountNumber(int id)
     {
         string numberBeforeDigit = id.ToString("D6");
@@ -25,15 +24,11 @@ public class AccountNumberGenerator
 
         return Number;
     }
-}
-
-public static class IdIncrementer
-{
-    private static int Id { get; set; }
     
     public static int GetNextId()
     {
         Id++;
         return Id;
     }
+
 }
