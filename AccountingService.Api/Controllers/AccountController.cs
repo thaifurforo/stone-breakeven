@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AccountingService.Api.Contracts.v1.Requests;
 using AccountingService.Api.Contracts.v1.Response;
 using AccountingService.Domain.Model;
 using AccountingService.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingService.Api.Controllers
@@ -71,13 +66,8 @@ namespace AccountingService.Api.Controllers
             {
                 var account = AccountList.Accounts.Find(account => account.Id == id);
                 
-                account.Number = account.Number;
-                account.Agency = account.Agency;
-                account.Amount = account.Amount;
                 account.Status = false;
-                account.OpeningDate = account.OpeningDate;
                 account.ClosingDate = DateOnly.FromDateTime(DateTime.Now);
-                account.Document = account.Document;
                 
                 return Ok(account);
         
