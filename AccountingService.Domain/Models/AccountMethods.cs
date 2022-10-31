@@ -3,7 +3,7 @@ namespace AccountingService.Domain.Model;
 
 public partial class Account
 {
-    public static string GetAccountNumber(int id)
+    public string GetAccountNumber(int id)
     {
         string numberBeforeDigit = id.ToString("D6");
 
@@ -25,7 +25,7 @@ public partial class Account
         return Number;
     }
     
-    public static int GetNextId()
+    public int GetNextId()
     {
         Id++;
         return Id;

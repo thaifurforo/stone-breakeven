@@ -6,8 +6,8 @@ namespace AccountingService.Domain.Model;
 
 public partial class Account
 {
-    public static int Id { get; set; }
-    public static string Number { get; set; }
+    public int Id { get; set; }
+    public string Number { get; set; }
     public string Agency { get; set; }
     public decimal Amount { get; set; }
     public bool Status { get; set; }

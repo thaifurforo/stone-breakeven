@@ -22,7 +22,7 @@ namespace AccountingService.Api.Controllers
         [HttpGet]
         public ActionResult<List<Account>> GetAllAccounts()
         {
-            if (AccountList.IsEmptyTodoItems())
+            if (AccountList.IsEmptyAccounts())
             {
                 return NoContent();
             }
@@ -32,30 +32,30 @@ namespace AccountingService.Api.Controllers
 
         // GET: api/Account/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(long id)
+        public async Task<ActionResult<Account>> GetAccount(int id)
         {
-            var account = await _context.Accounts.FindAsync(id);
+            var result = AccountList.Accounts.Find(account => account.Id == id);
 
-            if (account == null)
+            if (result is null)
             {
-                return NotFound();
+                return NotFound(new { message = "The given Id does not exist in the Accounts List." });
             }
 
-            return account;
+            return Ok(result);
         }
 
         // POST: api/Account
         [HttpPost]
-        public IActionResult CreateToDo([FromBody] CreateAccountRequest request)
+        public IActionResult CreateAccount([FromBody] CreateAccountRequest request)
         {
             try
             {
                 request.Validate();
 
-                var todo = new Account(request.Document, request.Agency);
-                AccountList.Accounts.Add(todo);
+                var account = new Account(request.Document, request.Agency);
+                AccountList.Accounts.Add(account);
 
-                return Ok(todo);
+                return Ok(account);
             }
             catch(BadHttpRequestException ex)
             {
@@ -63,10 +63,29 @@ namespace AccountingService.Api.Controllers
             }
         }
 
-        // PUT: api/Account/5
-        [HttpPut("{id}")]
-        public void PutAccount(int id, [FromBody] string value)
+        // PUT: api/Account/5/deactivate
+        [HttpPut("{id}/deactivate")]
+        public async Task<IActionResult> PutAccount(int id)
         {
+            try
+            {
+                var account = AccountList.Accounts.Find(account => account.Id == id);
+                
+                account.Number = account.Number;
+                account.Agency = account.Agency;
+                account.Amount = account.Amount;
+                account.Status = false;
+                account.OpeningDate = account.OpeningDate;
+                account.ClosingDate = DateOnly.FromDateTime(DateTime.Now);
+                account.Document = account.Document;
+                
+                return Ok(account);
+        
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         // DELETE: api/Account/5

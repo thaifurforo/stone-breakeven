@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ReadModelContext>(opt =>
-    opt.UseInMemoryDatabase("TodoList"));
+    opt.UseInMemoryDatabase("Accounts"));
 builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen(c =>
 //{
