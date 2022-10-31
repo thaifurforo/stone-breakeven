@@ -60,7 +60,7 @@ namespace AccountingService.Api.Controllers
 
         // POST: api/Account/5/deactivate
         [HttpPost("{id}/deactivate")]
-        public async Task<IActionResult> PutAccount(int id)
+        public async Task<IActionResult> DeactivateAccount(DeactivateAccountRequest request, int id)
         {
             try
             {
