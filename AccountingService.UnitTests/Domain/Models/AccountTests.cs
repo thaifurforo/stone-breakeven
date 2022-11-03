@@ -16,8 +16,6 @@ public class AccountTests
     private readonly DateOnly _genericCurrentDate = DateOnly.FromDateTime(DateTime.Today);
 
     private const string ValidDocument = "12345678909";
-    private const string InvalidDocument = "12345678999";
-    private const string InvalidDocumentLength = "123456789999";
     private const string ValidAgency = "001";
     private const decimal InitialAmount = 0;
 
@@ -73,6 +71,5 @@ public class AccountTests
          
          Assert.Equal(InitialAmount, account.Amount);
      }
-    
-    
+     
 }
