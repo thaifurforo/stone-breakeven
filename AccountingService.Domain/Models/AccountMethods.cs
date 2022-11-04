@@ -17,6 +17,8 @@ public partial class Account
             accountDigit += multipliers[i] * int.Parse(listOfNumbers[i].ToString());
         }
 
+        accountDigit %= 11;
+
         if (accountDigit == 1)
             accountDigit = 0;
 
