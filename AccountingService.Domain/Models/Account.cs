@@ -1,11 +1,12 @@
 using System.Text.Json.Serialization;
+using Credit.NetCore.Framework.Cqrs.Models;
 using DateOnlyTimeOnly.AspNet.Converters;
 
 namespace AccountingService.Domain.Models;
 
-public partial class Account
+public partial class Account : AggregateRoot
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public string Number { get; set; }
     public string Agency { get; set; }
     public decimal Amount { get; set; }
