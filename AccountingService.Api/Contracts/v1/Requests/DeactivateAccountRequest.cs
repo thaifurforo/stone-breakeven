@@ -5,8 +5,9 @@ namespace AccountingService.Api.Contracts.v1.Requests;
 public class DeactivateAccountRequest
 {
     
-    public DateOnly OpeningDate { get; }
-    public DateOnly ClosingDate { get; }
+    public DateOnly OpeningDate { get; set; }
+    public DateOnly ClosingDate { get; set; }
+    
 
     public void Validate()
     {
