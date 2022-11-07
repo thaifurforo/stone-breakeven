@@ -4,7 +4,6 @@ using AccountingService.Api.Contracts.v1.Validators;
 using AccountingService.Domain.Models;
 using AutoFixture;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingService.UnitTests.Api.Contracts.v1.Validators;
 
@@ -31,7 +30,7 @@ public class DeactivateAccountRequestValidatorTests
     public void ValidateDeactivateAccountRequest_GivenARequest_MustBeValidatedLikeExpected(DateOnly openingDate,
         DateOnly closingDate, decimal balance, bool expected)
     {
-        Account account = _fixture.Build<Account>()
+        var account = _fixture.Build<Account>()
             .Create();
         
         AccountList.Accounts.Add(account);
