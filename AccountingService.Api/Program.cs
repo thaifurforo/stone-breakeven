@@ -1,3 +1,4 @@
+using AccountingService.Domain.Contracts;
 using AccountingService.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,8 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ReadModelContext>(opt =>
-    opt.UseInMemoryDatabase("Accounts"));
+{
+    opt.UseInMemoryDatabase("Accounts");
+});
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IDbContext, ReadModelContext>();
 // builder.Services.AddSwaggerGen(c =>
 //{
 //    c.SwaggerDoc("v1", new() { Title = "AccountingService", Version = "v1" });

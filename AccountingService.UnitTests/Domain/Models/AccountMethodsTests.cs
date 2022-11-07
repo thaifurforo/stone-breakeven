@@ -20,7 +20,7 @@ public class AccountMethodsTests
         var account = _fixture.Build<Account>()
             .Create();
 
-        string accountNumber = account.GetAccountNumber(account.Id);
+        string accountNumber = account.GetAccountNumber();
 
         Assert.Equal(accountNumber, account.Number);
     }
@@ -39,7 +39,7 @@ public class AccountMethodsTests
             .With(x => x.Id, id)
             .Create();
 
-        account.Number = account.GetAccountNumber(id);
+        account.Number = account.GetAccountNumber();
         
         account.Number.Should().Be(expectedAccountNumber);
     }

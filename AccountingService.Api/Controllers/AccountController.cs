@@ -1,7 +1,8 @@
 using AccountingService.Api.Contracts.v1.Requests;
-using AccountingService.Api.Contracts.v1.Response;
+using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
 using AccountingService.Repository;
+using Credit.NetCore.Framework.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingService.Api.Controllers
@@ -11,27 +12,37 @@ namespace AccountingService.Api.Controllers
     public class AccountController : ControllerBase
     {
         
-        private readonly ReadModelContext _context;
+        private readonly IDbContext _context;
+
+        public AccountController(IDbContext context)
+        {
+            _context = context;
+        }
+
+        public AccountController()
+        {
+            
+        }
 
         // GET: api/Account
         [HttpGet]
-        public async Task<ActionResult<List<Account>>> GetAllAccounts()
+        public ActionResult<List<Account>> GetAllAccounts()
         {
-            if (AccountList.IsEmptyAccounts())
+            if (_context.Accounts.IsNullOrEmpty())
             {
                 return NoContent();
             }
 
-            return Ok(AccountList.Accounts);
+            return Ok(_context.Accounts);
         }
 
         // GET: api/Account/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(int id)
+        public ActionResult<Account> GetAccount(int id)
         {
-            var account = AccountList.Accounts.Find(account => account.Id == id);
+            var account = _context.Accounts.FindAsync(id);
 
-            if (account is null)
+            if (account == null)
             {
                 return NotFound(new { message = "The given Id does not exist in the Accounts List." });
             }
@@ -41,14 +52,16 @@ namespace AccountingService.Api.Controllers
 
         // POST: api/Account
         [HttpPost]
-        public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequest request)
+        public IActionResult CreateAccount([FromBody] CreateAccountRequest request)
         {
             try
             {
                 request.Validate();
-
+                
                 var account = new Account(request.Document, request.Agency);
-                AccountList.Accounts.Add(account);
+                _context.Accounts.Add(account);
+
+                _context.SaveChanges(true);
 
                 return Ok(account);
             }
@@ -60,14 +73,13 @@ namespace AccountingService.Api.Controllers
 
         // POST: api/Account/5/deactivate
         [HttpPost("{id}/deactivate")]
-        public async Task<IActionResult> DeactivateAccount([FromRoute] int id)
+        public IActionResult DeactivateAccount([FromRoute] int id)
         {
             try
             {
-                DeactivateAccountRequest request = new DeactivateAccountRequest(id);
-                request.Validate();
-
-                var account = AccountList.Accounts.Find(account => account.Id == id);
+                
+                var account = _context.Accounts.Find(id);
+                account.DeactivateAccount();
 
                 return Ok(account);
         

@@ -1,11 +1,15 @@
+
+
+using Microsoft.AspNetCore.Http;
+
 namespace AccountingService.Domain.Models;
 
 
 public partial class Account
 {
-    public string GetAccountNumber(int id)
+    public string GetAccountNumber()
     {
-        string numberBeforeDigit = id.ToString("D6");
+        string numberBeforeDigit = Id.ToString("D6");
 
         int[] multipliers = { 7, 6, 5, 4, 3, 2 };
         char[] listOfNumbers = numberBeforeDigit.ToCharArray();
@@ -26,5 +30,27 @@ public partial class Account
 
         return Number;
     }
+    
+    public void DeactivateAccount()
+    {
+        var genericCurrentDate = DateOnly.FromDateTime(DateTime.Now);
+
+        if (OpeningDate > genericCurrentDate)
+        {
+            throw new BadHttpRequestException($"Invalid request: Closing date must be equal or greater than opening date. Please, try again.");
+        }
+        else if (Balance != 0)
+        {
+            throw new BadHttpRequestException($"Invalid request: It's impossible to deactivate an account whose balance is different from 0. Please, try again.");
+        }
+        else
+        {
+            Status = false;
+            ClosingDate = genericCurrentDate;    
+        }
+        
+        
+    }
 
 }
+

@@ -4,7 +4,7 @@ using DateOnlyTimeOnly.AspNet.Converters;
 
 namespace AccountingService.Domain.Models;
 
-public partial class Account : AggregateRoot
+public partial class Account
 {
     public int Id { get; set; }
     public string Number { get; set; }
@@ -24,12 +24,17 @@ public partial class Account : AggregateRoot
     {
         Id = Interlocked.Increment(ref GlobalId);
         Agency = agency;
-        Number = GetAccountNumber(Id);
+        Number = GetAccountNumber();
         Balance = 0;
         Status = _status;
         OpeningDate = DateOnly.FromDateTime(DateTime.Now);
         ClosingDate = _closingDate;
         Document = document;
+    }
+
+    public Account()
+    {
+        
     }
     
 }
