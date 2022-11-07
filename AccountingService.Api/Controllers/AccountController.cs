@@ -60,15 +60,15 @@ namespace AccountingService.Api.Controllers
 
         // POST: api/Account/5/deactivate
         [HttpPost("{id}/deactivate")]
-        public async Task<IActionResult> DeactivateAccount(DeactivateAccountRequest request, int id)
+        public async Task<IActionResult> DeactivateAccount([FromRoute] int id)
         {
             try
             {
+                DeactivateAccountRequest request = new DeactivateAccountRequest(id);
+                request.Validate();
+
                 var account = AccountList.Accounts.Find(account => account.Id == id);
-                
-                account.Status = false;
-                account.ClosingDate = DateOnly.FromDateTime(DateTime.Now);
-                
+
                 return Ok(account);
         
             }

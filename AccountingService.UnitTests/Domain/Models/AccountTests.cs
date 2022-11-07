@@ -17,7 +17,7 @@ public class AccountTests
 
     private const string ValidDocument = "12345678909";
     private const string ValidAgency = "001";
-    private const decimal InitialAmount = 0;
+    private const decimal InitialBalance = 0;
 
     [Fact]
     public void CreateAccount_GivenDocument_ShouldAccountDocumentBeCorrectlySaved()
@@ -65,11 +65,11 @@ public class AccountTests
      }
 
      [Fact]
-     public void CreateAccount_ShouldAmountBeZero()
+     public void CreateAccount_ShouldBalanceBeZero()
      {
          var account = new Account(ValidDocument, ValidAgency);
          
-         Assert.Equal(InitialAmount, account.Amount);
+         Assert.Equal(InitialBalance, account.Balance);
      }
      
 }
