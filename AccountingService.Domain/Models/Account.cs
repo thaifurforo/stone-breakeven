@@ -9,7 +9,7 @@ public partial class Account : AggregateRoot
     public int Id { get; set; }
     public string Number { get; set; }
     public string Agency { get; set; }
-    public decimal Amount { get; set; }
+    public decimal Balance { get; set; }
     public bool Status { get; set; }
     [JsonConverter(typeof(DateOnlyJsonConverter))]
     public DateOnly OpeningDate { get; set; }
@@ -25,7 +25,7 @@ public partial class Account : AggregateRoot
         Id = Interlocked.Increment(ref GlobalId);
         Agency = agency;
         Number = GetAccountNumber(Id);
-        Amount = 0;
+        Balance = 0;
         Status = _status;
         OpeningDate = DateOnly.FromDateTime(DateTime.Now);
         ClosingDate = _closingDate;
