@@ -1,40 +1,20 @@
-using AccountingService.Domain.Contracts;
-using AccountingService.Repository;
-using AccountingService.Repository.Repositories;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore;
+using AccountingService.Api;
+using System.Diagnostics.CodeAnalysis;
 
+[assembly: ExcludeFromCodeCoverage]
 
-var builder = WebApplication.CreateBuilder(args);
+IConfiguration configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", false, true)
+    .AddEnvironmentVariables()
+    .Build();
 
-// Add services to the container.
+BuildWebHost(args).Run();
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<ReadModelContext>(opt =>
-{
-    opt.UseInMemoryDatabase("Accounts");
-});
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-
-// builder.Services.AddSwaggerGen(c =>
-//{
-//    c.SwaggerDoc("v1", new() { Title = "AccountingService", Version = "v1" });
-//});
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-    // app.UseSwagger();
-    // app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+IWebHost BuildWebHost(string[] args) =>
+    WebHost
+        .CreateDefaultBuilder(args)
+        .UseStartup<Startup>()
+        .UseConfiguration(configuration)
+        .Build();
