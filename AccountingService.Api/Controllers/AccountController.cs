@@ -1,7 +1,6 @@
 using AccountingService.Api.Contracts.v1.Requests;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
-using AccountingService.Repository;
 using Credit.NetCore.Framework.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,38 +10,33 @@ namespace AccountingService.Api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        
-        private readonly IDbContext _context;
+        private readonly IAccountRepository _accountRepository;
 
-        public AccountController(IDbContext context)
+        public AccountController(IAccountRepository accountRepository)
         {
-            _context = context;
-        }
-
-        public AccountController()
-        {
-            
+            _accountRepository = accountRepository;
         }
 
         // GET: api/Account
         [HttpGet]
         public ActionResult<List<Account>> GetAllAccounts()
         {
-            if (_context.Accounts.IsNullOrEmpty())
+            var accounts = _accountRepository.GetAllAccounts();
+            if (accounts.IsNullOrEmpty())
             {
                 return NoContent();
             }
 
-            return Ok(_context.Accounts);
+            return Ok(accounts);
         }
 
         // GET: api/Account/5
         [HttpGet("{id}")]
         public ActionResult<Account> GetAccount(int id)
         {
-            var account = _context.Accounts.FindAsync(id);
+            var account = _accountRepository.GetAccountById(id);
 
-            if (account == null)
+            if (account is null)
             {
                 return NotFound(new { message = "The given Id does not exist in the Accounts List." });
             }
@@ -59,9 +53,9 @@ namespace AccountingService.Api.Controllers
                 request.Validate();
                 
                 var account = new Account(request.Document, request.Agency);
-                _context.Accounts.Add(account);
+                _accountRepository.AddAccount(account);
 
-                _context.SaveChanges(true);
+                _accountRepository.Save();
 
                 return Ok(account);
             }
@@ -77,9 +71,8 @@ namespace AccountingService.Api.Controllers
         {
             try
             {
-                
-                var account = _context.Accounts.Find(id);
-                account.DeactivateAccount();
+
+                var account = _accountRepository.DeactivateAccount(id);
 
                 return Ok(account);
         

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Repository;
 
-public class ReadModelContext : DbContext, IDbContext
+public class ReadModelContext : DbContext
 {
     public ReadModelContext(DbContextOptions<ReadModelContext> options)
         : base(options)
@@ -18,6 +18,5 @@ public class ReadModelContext : DbContext, IDbContext
     }
 
     public DbSet<Account> Accounts { get; set; }
-    
-    
+
 }
