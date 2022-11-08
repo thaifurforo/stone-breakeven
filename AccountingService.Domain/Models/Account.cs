@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Credit.NetCore.Framework.Cqrs.Models;
 using DateOnlyTimeOnly.AspNet.Converters;
 
 namespace AccountingService.Domain.Models;
@@ -11,23 +10,19 @@ public partial class Account
     public string Agency { get; set; }
     public decimal Balance { get; set; }
     public bool Status { get; set; }
-    [JsonConverter(typeof(DateOnlyJsonConverter))]
-    public DateOnly OpeningDate { get; set; }
-    [JsonConverter(typeof(DateOnlyJsonConverter))]
-    public DateOnly? ClosingDate { get; set; }
+    public DateTime OpeningDate { get; set; }
+    public DateTime? ClosingDate { get; set; }
     public string Document { get; set; }
 
-    public static int GlobalId;
 
-    public Account(string document, string agency, DateOnly? _closingDate = null, bool _status = true)
+    public Account(string document, string agency, DateTime? _closingDate = null, bool _status = true)
 
     {
-        Id = Interlocked.Increment(ref GlobalId);
         Agency = agency;
         Number = GetAccountNumber();
         Balance = 0;
         Status = _status;
-        OpeningDate = DateOnly.FromDateTime(DateTime.Now);
+        OpeningDate = DateTime.Now;
         ClosingDate = _closingDate;
         Document = document;
     }

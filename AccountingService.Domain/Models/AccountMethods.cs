@@ -33,7 +33,7 @@ public partial class Account
     
     public void DeactivateAccount()
     {
-        var genericCurrentDate = DateOnly.FromDateTime(DateTime.Now);
+        var genericCurrentDate = DateTime.Now;
 
         if (OpeningDate > genericCurrentDate)
         {

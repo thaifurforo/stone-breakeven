@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Repository;
 
-public class ReadModelContext : DbContext
+public class ContextInMemory : DbContext
 {
-    public ReadModelContext(DbContextOptions<ReadModelContext> options)
+    public ContextInMemory(DbContextOptions<ContextInMemory> options)
         : base(options)
     {
     }

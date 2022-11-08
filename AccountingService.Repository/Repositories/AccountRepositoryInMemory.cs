@@ -4,42 +4,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Repository.Repositories
 {
-    public class AccountRepository : IAccountRepository, IDisposable
+    public class AccountRepositoryInMemory : IAccountRepository, IDisposable
     {
         
-        private readonly ReadModelContext _context;
+        private readonly ContextInMemory _contextInMemory;
 
-        public AccountRepository(ReadModelContext context)
+        public AccountRepositoryInMemory(ContextInMemory contextInMemory)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _contextInMemory = contextInMemory ?? throw new ArgumentNullException(nameof(contextInMemory));
         }
 
         public Account GetAccountById(int id)
         {
-            return _context.Accounts.Find(id);
+            return _contextInMemory.Accounts.Find(id);
         }
 
         public IEnumerable<Account> GetAllAccounts()
         {
-            return _context.Accounts.ToList();
+            return _contextInMemory.Accounts.ToList();
         }
 
         public Account AddAccount(Account account)
         {
 
-            return _context.Accounts.Add(account).Entity;
+            return _contextInMemory.Accounts.Add(account).Entity;
         }
 
         public Account DeactivateAccount(int id)
         {
-            var account = _context.Accounts.Find(id);
+            var account = _contextInMemory.Accounts.Find(id);
             account.DeactivateAccount();
             return account;
         }
 
         public void Save()
         {
-            _context.SaveChanges(true);
+            _contextInMemory.SaveChanges(true);
         }
 
         public bool disposed = false;
@@ -50,7 +50,7 @@ namespace AccountingService.Repository.Repositories
             {
                 if (disposing)
                 {
-                    _context.Dispose();
+                    _contextInMemory.Dispose();
                 }
             }
             this.disposed = true;
