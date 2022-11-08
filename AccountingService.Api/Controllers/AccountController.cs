@@ -73,6 +73,7 @@ namespace AccountingService.Api.Controllers
             {
 
                 var account = _accountRepository.DeactivateAccount(id);
+                _accountRepository.Save();
 
                 return Ok(account);
         
