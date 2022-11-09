@@ -9,19 +9,19 @@ public partial class Account
     public string Number { get; set; }
     public string Agency { get; set; }
     public decimal Balance { get; set; }
-    public bool Status { get; set; }
+    public bool IsActive { get; set; }
     public DateTime OpeningDate { get; set; }
     public DateTime? ClosingDate { get; set; }
     public string Document { get; set; }
 
 
-    public Account(string document, string agency, DateTime? _closingDate = null, bool _status = true)
+    public Account(string document, string agency, DateTime? _closingDate = null, bool _isActive = true)
 
     {
         Agency = agency;
         Number = GetAccountNumber();
         Balance = 0;
-        Status = _status;
+        IsActive = _isActive;
         OpeningDate = DateTime.Now;
         ClosingDate = _closingDate;
         Document = document;
