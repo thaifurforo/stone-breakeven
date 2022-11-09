@@ -10,10 +10,10 @@ public class AccountTests
     
     public AccountTests()
     {
-        _fixture.Register(() => default(DateOnly));
+        _fixture.Register(() => default(DateTime));
     }
     
-    private readonly DateOnly _genericCurrentDate = DateOnly.FromDateTime(DateTime.Today);
+    private readonly DateTime _genericCurrentDate = DateTime.Now;
 
     private const string ValidDocument = "12345678909";
     private const string ValidAgency = "001";
@@ -45,7 +45,7 @@ public class AccountTests
      {
          var account = new Account(ValidDocument, ValidAgency);
          
-         Assert.Equal(_genericCurrentDate, account.OpeningDate);
+         Assert.Equal(_genericCurrentDate.ToShortDateString(), account.OpeningDate.ToShortDateString());
      }
 
      [Fact]
@@ -57,11 +57,11 @@ public class AccountTests
      }
 
      [Fact]
-     public void CreateAccount_ShouldStatusBeTrue()
+     public void CreateAccount_ShouldIsActiveBeTrue()
      {
          var account = new Account(ValidDocument, ValidAgency);
 
-         Assert.True(account.Status);
+         Assert.True(account.IsActive);
      }
 
      [Fact]
