@@ -9,7 +9,9 @@ public partial class Account
 {
     public string GetAccountNumber()
     {
-        string numberBeforeDigit = Id.ToString("D6");
+        var numBase = Interlocked.Increment(ref GlobalId);
+        
+        string numberBeforeDigit = numBase.ToString("D6");
 
         int[] multipliers = { 7, 6, 5, 4, 3, 2 };
         char[] listOfNumbers = numberBeforeDigit.ToCharArray();

@@ -14,6 +14,7 @@ public partial class Account
     public DateTime? ClosingDate { get; set; }
     public string Document { get; set; }
 
+    public static int GlobalId;
 
     public Account(string document, string agency, DateTime? _closingDate = null, bool _isActive = true)
 
