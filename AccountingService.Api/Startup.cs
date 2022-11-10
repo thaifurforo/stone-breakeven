@@ -29,17 +29,16 @@ public class Startup
         {
             opt.UseInMemoryDatabase("Accounts");
         });
-        services.AddEndpointsApiExplorer();
         // services.AddScoped<IAccountRepository, AccountRepositoryInMemory>();
         services.AddScoped<IAccountRepository, AccountRepositorySql>();
-
+        services.AddScoped<IValidator<CreateAccountCommand>, CreateAccountCommandValidator>();
+        
+        services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new() { Title = "AccountingService", Version = "v1" });
         });
-        services.AddScoped<IValidator<CreateAccountCommand>, CreateAccountCommandValidator>();
-
-    }
+        }
 
     public void Configure(IApplicationBuilder app)
     {
@@ -48,6 +47,10 @@ public class Startup
         app.UseAuthorization();
         app.UseEndpoints(endpoints => endpoints.MapControllers());
         app.UseSwagger();
-        
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            options.RoutePrefix = string.Empty;
+        });       
     }
 }
