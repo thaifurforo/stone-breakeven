@@ -1,6 +1,10 @@
+using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
+using AccountingService.Domain.Validators.Commands;
 using AccountingService.Repository;
 using AccountingService.Repository.Repositories;
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Api;
@@ -16,7 +20,9 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddMvc();
         services.AddControllers();
+        services.AddMediatR(typeof(CreateAccountCommand));
         services.AddDbContext<ContextSql>(options => 
             options.UseSqlServer(Configuration.GetConnectionString("SqlConnection")));
         services.AddDbContext<ContextInMemory>(opt =>
@@ -26,10 +32,13 @@ public class Startup
         services.AddEndpointsApiExplorer();
         // services.AddScoped<IAccountRepository, AccountRepositoryInMemory>();
         services.AddScoped<IAccountRepository, AccountRepositorySql>();
+
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new() { Title = "AccountingService", Version = "v1" });
         });
+        services.AddScoped<IValidator<CreateAccountCommand>, CreateAccountCommandValidator>();
+
     }
 
     public void Configure(IApplicationBuilder app)

@@ -1,16 +1,12 @@
-
-
 using Microsoft.AspNetCore.Http;
 
 namespace AccountingService.Domain.Models;
-
 
 public partial class Account
 {
     public string GetAccountNumber()
     {
-        var numBase = Interlocked.Increment(ref GlobalId);
-        
+        var numBase = Id;
         string numberBeforeDigit = numBase.ToString("D6");
 
         int[] multipliers = { 7, 6, 5, 4, 3, 2 };

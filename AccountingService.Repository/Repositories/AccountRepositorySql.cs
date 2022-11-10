@@ -7,39 +7,44 @@ namespace AccountingService.Repository.Repositories
     public class AccountRepositorySql : IAccountRepository, IDisposable
     {
         
-        private readonly ContextSql _context;
+        private readonly ContextSql _contextSql;
 
         public AccountRepositorySql(ContextSql contextSql)
         {
-            _context = contextSql ?? throw new ArgumentNullException(nameof(contextSql));
+            _contextSql = contextSql ?? throw new ArgumentNullException(nameof(contextSql));
         }
 
-        public Account GetAccountById(int id)
+        public async Task<Account> GetAccountById(int id)
         {
-            return _context.Accounts.Find(id);
+            return await Task.Run(() => _contextSql.Accounts.Find(id));
         }
 
-        public IEnumerable<Account> GetAllAccounts()
+        public async Task<IEnumerable<Account>> GetAllAccounts()
         {
-            return _context.Accounts.ToList();
+            return await Task.Run(() => _contextSql.Accounts.ToList());
         }
 
-        public Account AddAccount(Account account)
+        public async Task<Account> AddAccount(Account account)
         {
 
-            return _context.Accounts.Add(account).Entity;
+            return await Task.Run(() => _contextSql.Accounts.Add(account).Entity);
         }
 
-        public Account DeactivateAccount(int id)
+        public async Task<Account> UpdateAccount(Account account)
         {
-            var account = _context.Accounts.Find(id);
+            return await Task.Run(() => _contextSql.Accounts.Update(account).Entity);
+        }
+
+        public async Task<Account> DeactivateAccount(int id)
+        {
+            var account = _contextSql.Accounts.Find(id);
             account.DeactivateAccount();
-            return account;
+            return await Task.Run(() => account);
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _context.SaveChanges(true);
+           await Task.Run(() => _contextSql.SaveChanges(true));
         }
 
         public bool disposed = false;
@@ -50,7 +55,7 @@ namespace AccountingService.Repository.Repositories
             {
                 if (disposing)
                 {
-                    _context.Dispose();
+                    _contextSql.Dispose();
                 }
             }
             this.disposed = true;

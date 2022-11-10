@@ -1,7 +1,8 @@
-using AccountingService.Api.Contracts.v1.Requests;
+using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
 using Credit.NetCore.Framework.Extensions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountingService.Api.Controllers
@@ -11,17 +12,19 @@ namespace AccountingService.Api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IMediator _mediator;
 
-        public AccountController(IAccountRepository accountRepository)
+        public AccountController(IAccountRepository accountRepository, IMediator mediator)
         {
-            _accountRepository = accountRepository;
+            this._accountRepository = accountRepository;
+            this._mediator = mediator;
         }
 
         // GET: api/Account
         [HttpGet]
-        public ActionResult<List<Account>> GetAllAccounts()
+        public async Task<ActionResult<List<Account>>> GetAllAccounts()
         {
-            var accounts = _accountRepository.GetAllAccounts();
+            var accounts = await _accountRepository.GetAllAccounts();
             if (accounts.IsNullOrEmpty())
             {
                 return NoContent();
@@ -32,13 +35,13 @@ namespace AccountingService.Api.Controllers
 
         // GET: api/Account/5
         [HttpGet("{id}")]
-        public ActionResult<Account> GetAccount(int id)
+        public async Task<ActionResult<Account>> GetAccount(int id)
         {
-            var account = _accountRepository.GetAccountById(id);
+            var account = await _accountRepository.GetAccountById(id);
 
             if (account is null)
             {
-                return NotFound(new { message = "The given Id does not exist in the Accounts List." });
+                return NotFound(new { message = "The given Id does not exist in the Accounts Database" });
             }
 
             return Ok(account);
@@ -46,42 +49,23 @@ namespace AccountingService.Api.Controllers
 
         // POST: api/Account
         [HttpPost]
-        public IActionResult CreateAccount([FromBody] CreateAccountRequest request)
+        public async Task<IActionResult> CreateAccount([FromBody] CreateAccountCommand command)
         {
-            try
-            {
-                request.Validate();
-                
-                var account = new Account(request.Document, request.Agency);
-                _accountRepository.AddAccount(account);
 
-                _accountRepository.Save();
+            var result = await _mediator.Send(command);
 
-                return Ok(account);
-            }
-            catch(BadHttpRequestException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            return Ok(result);
+
         }
 
         // POST: api/Account/5/deactivate
         [HttpPost("{id}/deactivate")]
-        public IActionResult DeactivateAccount([FromRoute] int id)
+        public async Task<IActionResult> DeactivateAccount([FromRoute] int id)
         {
-            try
-            {
+                var obj = new DeactivateAccountCommand { Id = id };
+                var result = await _mediator.Send(obj);
 
-                var account = _accountRepository.DeactivateAccount(id);
-                _accountRepository.Save();
-
-                return Ok(account);
-        
-            }
-            catch (BadHttpRequestException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+                return Ok(result);
         }
     }
 }

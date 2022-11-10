@@ -1,20 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+using AccountingService.Domain.Commands;
+using Credit.NetCore.Framework.Extensions;
 using FluentValidation;
-using AccountingService.Api.Contracts.v1.Requests;
-using static Credit.NetCore.Framework.Extensions.DocumentValidation;
 
-namespace AccountingService.Api.Contracts.v1.Validators;
+namespace AccountingService.Domain.Validators.Commands;
 
-public class CreateAccountRequestValidator : AbstractValidator<CreateAccountRequest>
+public class CreateAccountCommandValidator : AbstractValidator<CreateAccountCommand>
 {
-    public CreateAccountRequestValidator()
+    public CreateAccountCommandValidator()
     {
         RuleFor(x => x.Agency)
             .NotEmpty()
             .WithMessage("The Agency is required")
-            
+
             .Length(3)
             .WithMessage("The Agency must have 3 digits")
-            
+
             .Must(x => int.TryParse(x, out var val) && val > 0)
             .WithMessage("Invalid Agency number");
 
@@ -36,7 +37,5 @@ public class CreateAccountRequestValidator : AbstractValidator<CreateAccountRequ
             .Must(x => x.IsValidCnpj())
             .When(x => x.Document.Length == 14, ApplyConditionTo.CurrentValidator)
             .WithMessage("Document: Invalid CNPJ");
-
-
     }
 }

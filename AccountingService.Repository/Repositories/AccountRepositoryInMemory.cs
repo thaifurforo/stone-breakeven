@@ -14,32 +14,37 @@ namespace AccountingService.Repository.Repositories
             _contextInMemory = contextInMemory ?? throw new ArgumentNullException(nameof(contextInMemory));
         }
 
-        public Account GetAccountById(int id)
+        public async Task<Account> GetAccountById(int id)
         {
-            return _contextInMemory.Accounts.Find(id);
+            return await Task.Run(() => _contextInMemory.Accounts.Find(id));
         }
 
-        public IEnumerable<Account> GetAllAccounts()
+        public async Task<IEnumerable<Account>> GetAllAccounts()
         {
-            return _contextInMemory.Accounts.ToList();
+            return await Task.Run(() => _contextInMemory.Accounts.ToList());
         }
 
-        public Account AddAccount(Account account)
+        public async Task<Account> AddAccount(Account account)
         {
 
-            return _contextInMemory.Accounts.Add(account).Entity;
+            return await Task.Run(() => _contextInMemory.Accounts.Add(account).Entity);
         }
 
-        public Account DeactivateAccount(int id)
+        public async Task<Account> UpdateAccount(Account account)
+        {
+            return await Task.Run(() => _contextInMemory.Accounts.Update(account).Entity);
+        }
+
+        public async Task<Account> DeactivateAccount(int id)
         {
             var account = _contextInMemory.Accounts.Find(id);
             account.DeactivateAccount();
-            return account;
+            return await Task.Run(() => account);
         }
 
-        public void Save()
+        public async Task Save()
         {
-            _contextInMemory.SaveChanges(true);
+            await Task.Run(() => _contextInMemory.SaveChanges(true));
         }
 
         public bool disposed = false;
