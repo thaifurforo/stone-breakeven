@@ -12,5 +12,5 @@ public class DeactivatedAccountEvent : INotification
     public DateTime OpeningDate { get; set; }
     public DateTime? ClosingDate { get; set; }
     public string Document { get; set; }
-    public bool IsDeactivated { get; set; }
+
 }

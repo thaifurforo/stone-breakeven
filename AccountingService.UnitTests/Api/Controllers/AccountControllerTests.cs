@@ -15,7 +15,7 @@ namespace AccountingService.UnitTests.Api.Controllers;
 public class AccountControllerTests
 {
     private readonly Fixture _fixture = new();
-    private readonly ContextInMemory _context;
+    private readonly ReadModelInMemoryContext _readModelInMemoryContext;
     private IAccountRepository accountRepository;
     private AccountController accountController;
     
@@ -23,13 +23,13 @@ public class AccountControllerTests
     {
         _fixture.Register(() => default(DateOnly));
         
-        var options = new DbContextOptionsBuilder<ContextInMemory>()
+        var options = new DbContextOptionsBuilder<ReadModelInMemoryContext>()
             .UseInMemoryDatabase(databaseName: "FakeDatabase")
             .Options;
 
-        _context = new ContextInMemory(options);
+        _readModelInMemoryContext = new ReadModelInMemoryContext(options);
         
-        accountRepository = new AccountRepositoryInMemory(_context);
+        accountRepository = new AccountInMemoryRepository(_readModelInMemoryContext);
         accountController = new AccountController(accountRepository);
     }
     

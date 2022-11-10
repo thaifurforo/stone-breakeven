@@ -12,7 +12,8 @@ public class LogEventHandler :
     {
         return Task.Run(() =>
         {
-            Console.WriteLine($"CREATED: '{@event.Id} - " +
+            Console.WriteLine($"CREATED: " +
+                              $"'{@event.Id} - " +
                               $"{@event.Number} - " +
                               $"{@event.Agency} - " +
                               $"{@event.Balance} - " +
@@ -28,16 +29,10 @@ public class LogEventHandler :
     {
         return Task.Run(() =>
         {
-            Console.WriteLine($"DEACTIVATED: '{@event.IsDeactivated} - " +
+            Console.WriteLine($"DEACTIVATED: " +
                               $"{@event.Id} - " +
-                              $"{@event.Number} - " +
-                              $"{@event.Agency} - " +
-                              $"{@event.Balance} - " +
                               $"{@event.IsActive} - " +
-                              $"{@event.OpeningDate} - " +
-                              $"{@event.ClosingDate} - " +
-                              $"{@event.IsActive} - " +
-                              $"{@event.Document}'");
+                              $"{@event.ClosingDate}'");
         });
     }
     

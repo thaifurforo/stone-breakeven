@@ -4,47 +4,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Repository.Repositories
 {
-    public class AccountRepositoryInMemory : IAccountRepository, IDisposable
+    public class AccountSqlRepository : IAccountRepository, IDisposable
     {
         
-        private readonly ContextInMemory _contextInMemory;
+        private readonly ReadModelSqlContext _readModelSqlContext;
 
-        public AccountRepositoryInMemory(ContextInMemory contextInMemory)
+        public AccountSqlRepository(ReadModelSqlContext readModelSqlContext)
         {
-            _contextInMemory = contextInMemory ?? throw new ArgumentNullException(nameof(contextInMemory));
+            _readModelSqlContext = readModelSqlContext ?? throw new ArgumentNullException(nameof(readModelSqlContext));
         }
 
-        public async Task<Account> GetAccountById(int id)
+        public async Task<Account?> GetAccountById(int id)
         {
-            return await Task.Run(() => _contextInMemory.Accounts.Find(id));
+            return await Task.Run(() => _readModelSqlContext.Account.Find(id));
         }
 
         public async Task<IEnumerable<Account>> GetAllAccounts()
         {
-            return await Task.Run(() => _contextInMemory.Accounts.ToList());
+            return await Task.Run(() => _readModelSqlContext.Account.ToList());
         }
 
         public async Task<Account> AddAccount(Account account)
         {
 
-            return await Task.Run(() => _contextInMemory.Accounts.Add(account).Entity);
+            return await Task.Run(() => _readModelSqlContext.Account.Add(account).Entity);
         }
 
         public async Task<Account> UpdateAccount(Account account)
         {
-            return await Task.Run(() => _contextInMemory.Accounts.Update(account).Entity);
+            return await Task.Run(() => _readModelSqlContext.Account.Update(account).Entity);
         }
 
         public async Task<Account> DeactivateAccount(int id)
         {
-            var account = _contextInMemory.Accounts.Find(id);
+            var account = _readModelSqlContext.Account.Find(id);
             account.DeactivateAccount();
             return await Task.Run(() => account);
         }
 
         public async Task Save()
         {
-            await Task.Run(() => _contextInMemory.SaveChanges(true));
+           await Task.Run(() => _readModelSqlContext.SaveChanges(true));
         }
 
         public bool disposed = false;
@@ -55,7 +55,7 @@ namespace AccountingService.Repository.Repositories
             {
                 if (disposing)
                 {
-                    _contextInMemory.Dispose();
+                    _readModelSqlContext.Dispose();
                 }
             }
             this.disposed = true;

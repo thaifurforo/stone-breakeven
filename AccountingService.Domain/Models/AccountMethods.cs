@@ -41,6 +41,10 @@ public partial class Account
         {
             throw new BadHttpRequestException($"Invalid request: It's impossible to deactivate an account whose balance is different from 0. Please, try again.");
         }
+        else if (!IsActive)
+        {
+            throw new BadHttpRequestException($"Invalid request: This account is already deactivated.");
+        }
         else
         {
             IsActive = false;

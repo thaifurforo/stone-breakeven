@@ -22,8 +22,12 @@ public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccount
         {
             await _repository.DeactivateAccount(request.Id);
             await _repository.Save();
+
+            var account = _repository.GetAccountById(request.Id).Result;
             
-            await _mediator.Publish(new DeactivatedAccountEvent { Id = request.Id, IsDeactivated = true });
+            await _mediator.Publish(new DeactivatedAccountEvent { Id = account.Id, Number = account.Number, 
+                Agency = account.Agency, Balance = account.Balance, IsActive = account.IsActive, 
+                OpeningDate = account.OpeningDate, ClosingDate = account.ClosingDate, Document = account.Document});
             return await Task.FromResult("Account successfully deactivated");
 
         }

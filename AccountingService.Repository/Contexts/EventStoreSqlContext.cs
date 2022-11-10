@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Repository;
 
-public class ContextSql : DbContext
+public class EventStoreSqlContext : DbContext
 {
-    public ContextSql(DbContextOptions<ContextSql> options)
+    public EventStoreSqlContext(DbContextOptions<EventStoreSqlContext> options)
         : base(options)
     {
         this.Database.EnsureCreated();
@@ -20,5 +20,5 @@ public class ContextSql : DbContext
         optionsBuilder.LogTo(Console.WriteLine);
     }
     
-    public DbSet<Account> Accounts { get; set; }
+    public DbSet<EventStore> AccountEventsMetadata { get; set; }
 }
