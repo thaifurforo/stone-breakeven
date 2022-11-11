@@ -14,13 +14,14 @@ namespace AccountingService.Api.Controllers
         private readonly IAccountRepository _accountRepository;
         private readonly IMediator _mediator;
 
+   
         public AccountController(IAccountRepository accountRepository, IMediator mediator)
         {
             this._accountRepository = accountRepository;
             this._mediator = mediator;
         }
 
-        // GET: api/Account
+        // GET: api/account
         [HttpGet]
         public async Task<ActionResult<List<Account>>> GetAllAccounts()
         {
@@ -33,7 +34,7 @@ namespace AccountingService.Api.Controllers
             return Ok(accounts);
         }
 
-        // GET: api/Account/5
+        // GET: api/account/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Account>> GetAccount(int id)
         {
@@ -47,7 +48,7 @@ namespace AccountingService.Api.Controllers
             return Ok(account);
         }
 
-        // POST: api/Account
+        // POST: api/account
         [HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] CreateAccountCommand command)
         {
@@ -58,7 +59,7 @@ namespace AccountingService.Api.Controllers
 
         }
 
-        // POST: api/Account/5/deactivate
+        // POST: api/account/5/deactivate
         [HttpPost("{id}/deactivate")]
         public async Task<IActionResult> DeactivateAccount([FromRoute] int id)
         {

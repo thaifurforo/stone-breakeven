@@ -9,11 +9,6 @@ public class AccountMethodsTests
     
     private static readonly Fixture _fixture = new();
     
-    public AccountMethodsTests()
-    {
-        _fixture.Register(() => default(DateOnly)); 
-    }
-    
     [Fact]
     public void CreateAccount_GivenAnyIdNumber_ShouldAccountNumberBeCorrectlyGenerated()
     {

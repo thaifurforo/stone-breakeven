@@ -2,11 +2,8 @@ using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
-using AccountingService.Domain.Validators.Commands;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-
 namespace AccountingService.Domain.CommandHandlers;
 
 public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, string>
@@ -35,10 +32,10 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
             return await Task.FromResult("There's been a validation error on the creation of the account");
         }
         
-        var account = new Account(request.Document, request.Agency);
-
         try
         {
+            var account = new Account(request.Document, request.Agency);
+
             await _repository.AddAccount(account);
             await _repository.Save();
             

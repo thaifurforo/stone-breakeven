@@ -21,4 +21,5 @@ public class ReadModelSqlContext : DbContext
     }
     
     public DbSet<Account> Account { get; set; }
+    public DbSet<Transaction> Transaction { get; set; }
 }

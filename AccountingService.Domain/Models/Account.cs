@@ -13,9 +13,8 @@ public partial class Account
     public DateTime OpeningDate { get; set; }
     public DateTime? ClosingDate { get; set; }
     public string Document { get; set; }
-
-    public static int GlobalId;
-
+    public List<Transaction> Transactions { get; set; } = new();
+    
     public Account(string document, string agency, DateTime? closingDate = null, bool isActive = true, string? number = null)
 
     {

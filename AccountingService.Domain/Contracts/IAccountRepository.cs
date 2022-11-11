@@ -12,5 +12,6 @@ namespace AccountingService.Domain.Contracts
         Task<Account> UpdateAccount(Account account);
         Task<Account> DeactivateAccount(int id);
         Task Save();
+        Account GetAccountById(int? requestCreditAccountId);
     }
 }

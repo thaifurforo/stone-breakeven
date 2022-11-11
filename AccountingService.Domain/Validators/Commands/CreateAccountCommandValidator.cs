@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using AccountingService.Domain.Commands;
 using Credit.NetCore.Framework.Extensions;
 using FluentValidation;

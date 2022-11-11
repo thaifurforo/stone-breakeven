@@ -23,18 +23,26 @@ public class Startup
         services.AddMvc();
         services.AddControllers();
         services.AddMediatR(typeof(CreateAccountCommand));
+        
+        // Contexts
         services.AddDbContext<ReadModelSqlContext>(options => 
             options.UseSqlServer(Configuration.GetConnectionString("ReadModelSqlConnection")));
         services.AddDbContext<EventStoreSqlContext>(options => 
             options.UseSqlServer(Configuration.GetConnectionString("EventStoreSqlConnection")));
         services.AddDbContext<ReadModelInMemoryContext>(opt =>
         {
-            opt.UseInMemoryDatabase("Accounts");
+            opt.UseInMemoryDatabase("InMemoryTestDatabase");
         });
-        // services.AddScoped<IAccountRepository, AccountRepositoryInMemory>();
+        
+        //Repositories
         services.AddScoped<IAccountRepository, AccountSqlRepository>();
         services.AddScoped<IEventStoreRepository, EventStoreSqlRepository>();
+        services.AddScoped<ITransactionRepository, TransactionSqlRepository>();
+        
+        //Validators
         services.AddScoped<IValidator<CreateAccountCommand>, CreateAccountCommandValidator>();
+        services.AddScoped<IValidator<CreateTransactionCommand>, CreateTransactionCommandValidator>();
+
         
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>

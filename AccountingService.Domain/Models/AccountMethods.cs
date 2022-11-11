@@ -21,7 +21,7 @@ public partial class Account
 
         accountDigit %= 11;
 
-        if (accountDigit == 1)
+        if (accountDigit is 1 or >= 10)
             accountDigit = 0;
 
         Number = numberBeforeDigit + '-' + accountDigit;

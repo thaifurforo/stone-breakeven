@@ -8,11 +8,6 @@ public class AccountTests
 {
     private static readonly Fixture _fixture = new();
     
-    public AccountTests()
-    {
-        _fixture.Register(() => default(DateTime));
-    }
-    
     private readonly DateTime _genericCurrentDate = DateTime.Now;
 
     private const string ValidDocument = "12345678909";
