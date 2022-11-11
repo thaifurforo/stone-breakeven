@@ -42,14 +42,19 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
             await _repository.AddTransaction(transaction);
             await _repository.Save();
 
-            var creditAccount = _accountRepository.GetAccountById(request.CreditAccountId);
-            var debitAccount = _accountRepository.GetAccountById(request.DebitAccountId);
+            if (request.CreditAccountId != null)
+            {
+                var creditAccount = _accountRepository.GetAccountById(request.CreditAccountId).Result;
+                creditAccount.Balance += request.Amount;
+                await _accountRepository.UpdateAccount(creditAccount);
+            }
 
-            creditAccount.Balance += request.Amount;
-            debitAccount.Balance -= request.Amount;
-
-            await _accountRepository.UpdateAccount(creditAccount);
-            await _accountRepository.UpdateAccount(debitAccount);
+            if (request.DebitAccountId != null)
+            {
+                var debitAccount = _accountRepository.GetAccountById(request.DebitAccountId).Result;
+                debitAccount.Balance -= request.Amount;
+                await _accountRepository.UpdateAccount(debitAccount);
+            }
             
             await _mediator.Publish(new CreatedTransactionEvent {TransactionId = transaction.TransactionId, 
                 TransactionType = transaction.TransactionType, CreditAccountId = transaction.CreditAccountId, 

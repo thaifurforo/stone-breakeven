@@ -47,8 +47,14 @@ namespace AccountingService.Repository.Repositories
             await Task.Run(() => _readModelInMemoryContext.SaveChanges(true));
         }
 
+        public async Task<Account> GetAccountById(int? transactionAccountId)
+        {
+            return (await Task.Run(() => _readModelInMemoryContext.Accounts.Find(transactionAccountId)))!;
+        }
+
         public bool disposed = false;
-        
+        private IAccountRepository _accountRepositoryImplementation;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
