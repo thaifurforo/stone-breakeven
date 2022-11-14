@@ -4,6 +4,8 @@ using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using FluentValidation;
 using MediatR;
+using Newtonsoft.Json;
+
 namespace AccountingService.Domain.CommandHandlers;
 
 public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, string>
@@ -47,7 +49,8 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
                 Agency = account.Agency, Balance = account.Balance, IsActive = account.IsActive, 
                 OpeningDate = account.OpeningDate, ClosingDate = account.ClosingDate, Document = account.Document});
 
-            return await Task.FromResult("Account successfully created");
+            return await Task.FromResult($"Account successfully created" +
+                                         $"\n{JsonConvert.SerializeObject(account)}");
         }
         
         catch (Exception ex)

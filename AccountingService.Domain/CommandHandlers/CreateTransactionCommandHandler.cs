@@ -5,6 +5,7 @@ using AccountingService.Domain.Notifications;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace AccountingService.Domain.CommandHandlers;
 
@@ -80,7 +81,8 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
                 DebitAccountId = transaction.DebitAccountId, Amount = transaction.Amount, 
                 TransactionDate = transaction.TransactionDate});
 
-            return await Task.FromResult("Transaction successfully created");
+            return await Task.FromResult($"Transaction successfully created" +
+                                         $"\n{JsonConvert.SerializeObject(transaction)}");
         }
         
         catch (Exception ex)

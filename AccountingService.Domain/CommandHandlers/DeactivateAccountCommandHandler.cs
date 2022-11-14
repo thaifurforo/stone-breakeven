@@ -1,7 +1,9 @@
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Notifications;
+using Credit.NetCore.Framework.Extensions.Newtonsoft;
 using MediatR;
+using Newtonsoft.Json;
 
 namespace AccountingService.Domain.CommandHandlers;
 
@@ -28,7 +30,8 @@ public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccount
             await _mediator.Publish(new DeactivatedAccountEvent { Id = account.Id, Number = account.Number, 
                 Agency = account.Agency, Balance = account.Balance, IsActive = account.IsActive, 
                 OpeningDate = account.OpeningDate, ClosingDate = account.ClosingDate, Document = account.Document});
-            return await Task.FromResult("Account successfully deactivated");
+            return await Task.FromResult($"Account successfully deactivated\n" +
+                                         $"{JsonConvert.SerializeObject(account)}");
 
         }
         catch (Exception ex)
