@@ -1,6 +1,6 @@
+using AccountingService.Api.Contracts.v1.Requests;
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
-using AccountingService.Domain.Models;
 using Credit.NetCore.Framework.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ namespace AccountingService.Api.Controllers
 
         // GET: api/account
         [HttpGet]
-        public async Task<ActionResult<List<Account>>> GetAllAccounts()
+        public async Task<IActionResult> GetAllAccounts()
         {
             var accounts = await _accountRepository.GetAllAccounts();
             if (accounts.IsNullOrEmpty())
@@ -36,9 +36,9 @@ namespace AccountingService.Api.Controllers
 
         // GET: api/account/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(int id)
+        public async Task<IActionResult> GetAccount([FromRoute] GetByAccountId request)
         {
-            var account = await _accountRepository.GetAccountById(id);
+            var account = await _accountRepository.GetAccountById(request.Id);
 
             if (account is null)
             {
@@ -61,9 +61,9 @@ namespace AccountingService.Api.Controllers
 
         // POST: api/account/5/deactivate
         [HttpPost("{id}/deactivate")]
-        public async Task<IActionResult> DeactivateAccount([FromRoute] int id)
+        public async Task<IActionResult> DeactivateAccount([FromRoute] GetByAccountId request)
         {
-                var obj = new DeactivateAccountCommand { Id = id };
+                var obj = new DeactivateAccountCommand { Id = request.Id };
                 var result = await _mediator.Send(obj);
 
                 return Ok(result);

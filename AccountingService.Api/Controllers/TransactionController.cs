@@ -1,6 +1,6 @@
+using AccountingService.Api.Contracts.v1.Requests;
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
-using AccountingService.Domain.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -23,7 +23,7 @@ namespace TransactioningService.Api.Controllers
 
         // GET: api/transaction
         [HttpGet]
-        public async Task<ActionResult<List<Transaction>>> GetAllTransactions()
+        public async Task<IActionResult> GetAllTransactions()
         {
             var transactions = await _transactionRepository.GetAllTransactions();
             if (transactions.IsNullOrEmpty())
@@ -36,9 +36,10 @@ namespace TransactioningService.Api.Controllers
 
         // GET: api/transaction/id/5
         [HttpGet("id/{id}")]
-        public async Task<ActionResult<Transaction>> GetTransactionById(Guid id)
+        public async Task<IActionResult> GetTransactionById([FromRoute] GetByTransactionId request)
         {
-            var transaction = await _transactionRepository.GetTransactionById(id);
+            var transactionId = Guid.Parse(request.Id);
+            var transaction = await _transactionRepository.GetTransactionById(transactionId);
 
             if (transaction is null)
             {
@@ -50,9 +51,9 @@ namespace TransactioningService.Api.Controllers
         
         // GET: api/transaction/account/5
         [HttpGet("account/{accountId}")]
-        public async Task<ActionResult<Transaction>> GetTransactionsByAccount(int accountId)
+        public async Task<IActionResult> GetTransactionsByAccount([FromRoute] GetByAccountId request)
         {
-            var transaction = await _transactionRepository.GetTransactionsByAccount(accountId);
+            var transaction = await _transactionRepository.GetTransactionsByAccount(request.Id);
 
             if (transaction is null)
             {
@@ -64,9 +65,9 @@ namespace TransactioningService.Api.Controllers
         
         // GET: api/transaction/credit_account/5
         [HttpGet("credit_account/{accountId}")]
-        public async Task<ActionResult<Transaction>> GetCreditTransactionsByAccount(int accountId)
+        public async Task<IActionResult> GetCreditTransactionsByAccount([FromRoute] GetByAccountId request)
         {
-            var transaction = await _transactionRepository.GetCreditTransactionsByAccount(accountId);
+            var transaction = await _transactionRepository.GetCreditTransactionsByAccount(request.Id);
 
             if (transaction is null)
             {
@@ -78,9 +79,9 @@ namespace TransactioningService.Api.Controllers
         
         // GET: api/transaction/debit_account/5
         [HttpGet("debit_account/{accountId}")]
-        public async Task<ActionResult<Transaction>> GetDebitTransactionsByAccount(int accountId)
+        public async Task<IActionResult> GetDebitTransactionsByAccount([FromRoute] GetByAccountId request)
         {
-            var transaction = await _transactionRepository.GetDebitTransactionsByAccount(accountId);
+            var transaction = await _transactionRepository.GetDebitTransactionsByAccount(request.Id);
 
             if (transaction is null)
             {
@@ -92,7 +93,7 @@ namespace TransactioningService.Api.Controllers
 
         // POST: api/transaction
         [HttpPost]
-        public async Task<IActionResult> Transaction([FromBody] CreateTransactionCommand command)
+        public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionCommand command)
         {
 
             var result = await _mediator.Send(command);
