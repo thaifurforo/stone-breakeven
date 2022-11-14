@@ -18,5 +18,6 @@ public class ReadModelInMemoryContext : DbContext
     }
 
     public DbSet<Account> Accounts { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
 
 }

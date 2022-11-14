@@ -34,7 +34,7 @@ public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccount
         catch (Exception ex)
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
-            return await Task.FromResult("There's been an error on the deactivation of the account");
+            return await Task.FromResult($"There's been an error on the deactivation of the account: {ex.Message}");
         }
     }
 }

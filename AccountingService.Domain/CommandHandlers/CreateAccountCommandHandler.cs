@@ -29,7 +29,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         catch (Exception ex)
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
-            return await Task.FromResult("There's been a validation error on the creation of the account");
+            return await Task.FromResult($"There's been a validation error on the creation of the account: {ex.Message}");
         }
         
         try
@@ -54,7 +54,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
 
-            return await Task.FromResult("There's been an error on the creation of the account");
+            return await Task.FromResult($"There's been an error on the creation of the account: {ex.Message}");
         }
     }
 }

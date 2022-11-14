@@ -16,12 +16,17 @@ namespace AccountingService.Repository.Repositories
 
         public async Task<Account?> GetAccountById(int id)
         {
-            return await Task.Run(() => _readModelSqlContext.Account.Find(id));
+            var account = _readModelSqlContext.Account
+                .Where(x => x.Id == id)
+                .Include(x => x.Transactions);
+            return await await Task.FromResult(account.FirstOrDefaultAsync());
         }
 
         public async Task<IEnumerable<Account>> GetAllAccounts()
         {
-            return await Task.Run(() => _readModelSqlContext.Account.ToList());
+            var accounts = _readModelSqlContext.Account
+                .Include(X => X.Transactions);
+            return await Task.Run(() => accounts.ToList());
         }
 
         public async Task<Account> AddAccount(Account account)
@@ -37,7 +42,7 @@ namespace AccountingService.Repository.Repositories
 
         public async Task<Account> DeactivateAccount(int id)
         {
-            var account = _readModelSqlContext.Account.Find(id);
+            var account = await _readModelSqlContext.Account.FindAsync(id);
             account.DeactivateAccount();
             return await Task.Run(() => account);
         }
@@ -49,7 +54,10 @@ namespace AccountingService.Repository.Repositories
 
         public async Task<Account> GetAccountById(int? transactionAccountId)
         {
-            return (await Task.Run(() => _readModelSqlContext.Account.Find(transactionAccountId)))!;
+            var account = _readModelSqlContext.Account
+                .Where(x => x.Id == transactionAccountId)
+                .Include(x => x.Transactions);
+            return await await Task.FromResult(account.FirstOrDefaultAsync())!;        
         }
 
         public bool disposed = false;

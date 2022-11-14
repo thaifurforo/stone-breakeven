@@ -63,7 +63,7 @@ namespace TransactioningService.Api.Controllers
         }
         
         // GET: api/transaction/credit_account/5
-        [HttpGet("account/{accountId}")]
+        [HttpGet("credit_account/{accountId}")]
         public async Task<ActionResult<Transaction>> GetCreditTransactionsByAccount(int accountId)
         {
             var transaction = await _transactionRepository.GetCreditTransactionsByAccount(accountId);
@@ -76,8 +76,8 @@ namespace TransactioningService.Api.Controllers
             return Ok(transaction);
         }
         
-        // GET: api/transaction/dedit_account/5
-        [HttpGet("account/{accountId}")]
+        // GET: api/transaction/debit_account/5
+        [HttpGet("debit_account/{accountId}")]
         public async Task<ActionResult<Transaction>> GetDebitTransactionsByAccount(int accountId)
         {
             var transaction = await _transactionRepository.GetDebitTransactionsByAccount(accountId);
@@ -92,7 +92,7 @@ namespace TransactioningService.Api.Controllers
 
         // POST: api/transaction
         [HttpPost]
-        public async Task<IActionResult> Transaction([FromBody] CreateTransactionCommand command, CreateAccountCommand command2)
+        public async Task<IActionResult> Transaction([FromBody] CreateTransactionCommand command)
         {
 
             var result = await _mediator.Send(command);

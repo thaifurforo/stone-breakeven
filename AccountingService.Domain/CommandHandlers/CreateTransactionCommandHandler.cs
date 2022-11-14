@@ -4,6 +4,7 @@ using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace AccountingService.Domain.CommandHandlers;
 
@@ -32,7 +33,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         catch (Exception ex)
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
-            return await Task.FromResult("There's been a validation error on the creation of the transaction");
+            return await Task.FromResult($"There's been a validation error on the creation of the transaction: {ex.Message}");
         }
         
         try
@@ -45,15 +46,33 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
             if (request.CreditAccountId != null)
             {
                 var creditAccount = _accountRepository.GetAccountById(request.CreditAccountId).Result;
-                creditAccount.Balance += request.Amount;
-                await _accountRepository.UpdateAccount(creditAccount);
+                if (!creditAccount.IsActive)
+                {
+                    throw new BadHttpRequestException(message: "The Credit Account informed is not active. Try again.");
+                }
+                else
+                {
+                    creditAccount.Balance += request.Amount;
+                    creditAccount.Transactions.Add(transaction);
+                    await _accountRepository.UpdateAccount(creditAccount);
+                    await _accountRepository.Save();
+                }
             }
 
             if (request.DebitAccountId != null)
             {
                 var debitAccount = _accountRepository.GetAccountById(request.DebitAccountId).Result;
-                debitAccount.Balance -= request.Amount;
-                await _accountRepository.UpdateAccount(debitAccount);
+                if (!debitAccount.IsActive)
+                {
+                    throw new BadHttpRequestException(message: "The Debit Account informed is not active. Try again.");
+                }
+                else
+                {
+                    debitAccount.Balance -= request.Amount;
+                    debitAccount.Transactions.Add(transaction);
+                    await _accountRepository.UpdateAccount(debitAccount);
+                    await _accountRepository.Save();
+                }
             }
             
             await _mediator.Publish(new CreatedTransactionEvent {TransactionId = transaction.TransactionId, 
@@ -68,7 +87,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
 
-            return await Task.FromResult("There's been an error on the creation of the transaction");
+            return await Task.FromResult($"There's been an error on the creation of the transaction: {ex.Message}");
         }
     }
 }
