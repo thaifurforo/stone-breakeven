@@ -61,9 +61,7 @@ public class CreateAccountCommandHandlerTests
     public async void CreateAccountCommandHandlerTest()
     {
         // When
-        var handler = new CreateAccountCommandHandler(_mediator.Object, _repository.Object, _validator);
-
-        await handler.Handle(_command, CancellationToken.None);
+        await _handler.Handle(_command, CancellationToken.None);
         
         // Then
         _mediator.Verify(x => x.Publish(It.IsAny<CreatedAccountEvent>(), 
