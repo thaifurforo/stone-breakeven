@@ -7,7 +7,8 @@ namespace AccountingService.Domain.Contracts
     {
 
         Task<IEnumerable<EventStore>> GetAllEvents();
-        Task<EventStore?> GetEventById(int id);
+        Task<EventStore?> GetEventById(Guid id);
+        Task<IEnumerable<EventStore?>> GetEventsByAccountId(int id);
         Task<EventStore> AddEvent(EventStore eventStore);
         Task Save();
     }

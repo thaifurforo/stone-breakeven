@@ -20,5 +20,5 @@ public class EventStoreSqlContext : DbContext
         optionsBuilder.LogTo(Console.WriteLine);
     }
     
-    public DbSet<EventStore> AccountEventsMetadata { get; set; }
+    public DbSet<EventStore> EventMetaData { get; set; }
 }
