@@ -53,7 +53,6 @@ namespace AccountingService.Repository.Repositories
         }
 
         public bool disposed = false;
-        private IAccountRepository _accountRepositoryImplementation;
 
         protected virtual void Dispose(bool disposing)
         {
