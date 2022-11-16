@@ -19,7 +19,7 @@ public class CreateTransactionCommandValidator : AbstractValidator<CreateTransac
             .Empty()
             .When(x => x.TransactionType == "withdraw")
             .WithMessage("There should be no Credit Account informed for withdraw transactions.");
-        
+
         RuleFor(x => x.DebitAccountId)
             .NotEmpty()
             .When(x => x.TransactionType == "withdraw")
@@ -31,7 +31,10 @@ public class CreateTransactionCommandValidator : AbstractValidator<CreateTransac
 
             .Empty()
             .When(x => x.TransactionType == "deposit")
-            .WithMessage("There should be no Debit Account informed for deposit transactions.");
+            .WithMessage("There should be no Debit Account informed for deposit transactions.")
+
+            .NotEqual(x => x.CreditAccountId)
+            .WithMessage("Credit and Debit accounts can't be the same.");
 
         var transactionTypes = new List<string>() { "deposit", "withdraw", "transfer" };
         RuleFor(x => x.TransactionType)
