@@ -19,9 +19,7 @@ public class TransactionControllerTests : IAsyncLifetime
     // Given
     private readonly TransactionController _transactionController;
     private readonly ITransactionRepository _transactionRepository;
-    private readonly IAccountRepository _accountRepository;
     private readonly Mock<IMediator> _mediator = new();
-    private readonly Mock<ITransactionRepository> _mockRepository = new ();
 
     private readonly Account _creditAccount;
     private readonly Account _debitAccount;
@@ -34,7 +32,6 @@ public class TransactionControllerTests : IAsyncLifetime
             .Options;
         var readModelSqlContext = new ReadModelSqlContext(options);
         _transactionRepository = new TransactionSqlRepository(readModelSqlContext);
-        _accountRepository = new AccountSqlRepository(readModelSqlContext);
         _transactionController = new TransactionController(_transactionRepository, _mediator.Object);
         
         var fixture = new Fixture();
