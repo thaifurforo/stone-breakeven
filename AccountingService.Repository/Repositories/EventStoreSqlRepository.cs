@@ -26,10 +26,10 @@ namespace AccountingService.Repository.Repositories
         
         public async Task<IEnumerable<EventStore?>> GetEventsByAccountId(int id)
         {
-            return _eventStoreSqlContext.EventMetaData
-                .Where(x => x.Metadata.Contains($"\"Id\":{id}") 
-                            || x.Metadata.Contains($"AccountId\":{id}"))
-                .ToListAsync().Result;
+            var query = _eventStoreSqlContext.EventMetaData
+                .Where(x => x.Metadata.Contains($"\"Id\":{id}")
+                            || x.Metadata.Contains($"AccountId\":{id}"));
+            return await Task.Run(() => query.ToListAsync());
         }
         
         public async Task<EventStore> AddEvent(EventStore eventStore)
