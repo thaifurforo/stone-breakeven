@@ -2,6 +2,9 @@ using AccountingService.Domain.CommandHandlers;
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Notifications;
+using AccountingService.Domain.Validators.Commands;
+using AutoFixture;
+using FluentAssertions;
 using FluentValidation;
 using MediatR;
 using Moq;
@@ -10,39 +13,77 @@ namespace AccountingService.UnitTests.Domain.CommandHandlers;
 
 public class CreateAccountCommandHandlerTests
 {
-    
+    // Given
+    private readonly Fixture _fixture = new();
+    private readonly Mock<IAccountRepository> _repository = new();
     private readonly Mock<IMediator> _mediator = new();
-    private readonly Mock<IAccountRepository> _accountRepository = new();
-    private readonly Mock<IValidator<CreateAccountCommand>> _validator = new();
+    private readonly CreateAccountCommandHandler _handler;
+    private readonly IValidator<CreateAccountCommand> _validator;
+    private readonly CreateAccountCommand _command;
+    
+    private const string GenericValidAgency = "001";
+    private const string GenericValidDocument = "12345678909";
 
-
-    [Theory]
-    [InlineData("001", "12345678909", 1)]
-    [InlineData("001", "12345678000942", 1)]
-    [InlineData("001", "12345678900", 0)]
-    [InlineData("001", "12345678000900", 0)]
-    [InlineData("001", "1234567890123456", 0)]
-    [InlineData("abc", "12345678909", 0)]
-    public async void CreateAccountCommandHandler_GivenRequest_ShouldReturnExpected(string agency, string document, int expected)
+    public CreateAccountCommandHandlerTests()
     {
-        var handler = new CreateAccountCommandHandler(_mediator.Object, _accountRepository.Object, _validator.Object);
+        _validator = new CreateAccountCommandValidator();
+        _handler = new(_mediator.Object, _repository.Object, _validator);
+        _command = new CreateAccountCommand() { Agency = GenericValidAgency, Document = GenericValidDocument };
 
-        await handler.Handle(new CreateAccountCommand(){Agency = agency, Document = document}, CancellationToken.None);
+    }
+    
+    [Theory]
+    [InlineData("001", "12345678909", true, 1)]
+    [InlineData("001", "12345678000942", true, 1)]
+    [InlineData("001", "12345678900", false, 0)]
+    [InlineData("001", "12345678000900", false, 0)]
+    [InlineData("001", "1234567890123456", false, 0)]
+    [InlineData("abc", "12345678909", false, 0)]
+    public async void CreateAccountCommandHandler_GivenRequest_ShouldReturnExpected(string agency, string document,
+        bool expectedValidation, int expectedPublish)
+    {
+        var command = new CreateAccountCommand() { Agency = agency, Document = document };
+
+        // When
+        var validationResult = await _validator.ValidateAsync
+        (command,
+            opt => opt.IncludeAllRuleSets(),
+            It.IsAny<CancellationToken>());
+        await _handler.Handle(command, CancellationToken.None);
         
-        _mediator.Verify(x => x.Publish(It.IsAny<CreatedAccountEvent>(), It.IsAny<CancellationToken>()), Times.Exactly(expected));
+        // Then
+        _mediator.Verify(x => x.Publish(It.IsAny<CreatedAccountEvent>(), 
+            It.IsAny<CancellationToken>()), Times.Exactly(expectedPublish));
+        validationResult.IsValid.Should().Be(expectedValidation);
     }
 
     [Fact]
     public async void CreateAccountCommandHandlerTest()
     {
-        var handler = new CreateAccountCommandHandler(_mediator.Object, _accountRepository.Object, _validator.Object);
+        // When
+        var handler = new CreateAccountCommandHandler(_mediator.Object, _repository.Object, _validator);
 
-        await handler.Handle(new CreateAccountCommand(), CancellationToken.None);
+        await handler.Handle(_command, CancellationToken.None);
         
-        _mediator.Verify(x => x.Publish(It.IsAny<INotification>(), It.IsAny<CancellationToken>()), Times.Once);
+        // Then
+        _mediator.Verify(x => x.Publish(It.IsAny<CreatedAccountEvent>(), 
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Fact]
+    public async void Handle_GivenAValidCommand_ShouldCreateAccountAndSaveChanges()
+    {
+        // When
+        var command = _fixture.Build<CreateAccountCommand>()
+            .With(x => x.Agency, GenericValidAgency)
+            .With(x => x.Document, GenericValidDocument)
+            .Create();
+
+        await _handler.Handle(command, CancellationToken.None);
+        
+        // Then
+        _repository.Verify(x => x.Save(), Times.Exactly(2)); }
+}
     
      
     
-}
