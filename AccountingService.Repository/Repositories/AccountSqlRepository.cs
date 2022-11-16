@@ -25,7 +25,7 @@ namespace AccountingService.Repository.Repositories
         public async Task<IEnumerable<Account>> GetAllAccounts()
         {
             var accounts = _readModelSqlContext.Account
-                .Include(X => X.Transactions);
+                .Include(x => x.Transactions);
             return await Task.Run(() => accounts.ToList());
         }
 
