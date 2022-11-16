@@ -17,5 +17,8 @@ public class Transaction
         Amount = amount;
         TransactionDate = DateTime.Now;
     }
-    
+
+    public Transaction()
+    {
+    }
 }
