@@ -1,3 +1,4 @@
+using AccountingService.Domain.CommandHandlers;
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Validators.Commands;
@@ -29,11 +30,7 @@ public class Startup
             options.UseSqlServer(Configuration.GetConnectionString("ReadModelSqlConnection")));
         services.AddDbContext<EventStoreSqlContext>(options => 
             options.UseSqlServer(Configuration.GetConnectionString("EventStoreSqlConnection")));
-        services.AddDbContext<ReadModelInMemoryContext>(opt =>
-        {
-            opt.UseInMemoryDatabase("InMemoryTestDatabase");
-        });
-        
+
         //Repositories
         services.AddScoped<IAccountRepository, AccountSqlRepository>();
         services.AddScoped<IEventStoreRepository, EventStoreSqlRepository>();
