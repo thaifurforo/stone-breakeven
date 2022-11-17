@@ -1,9 +1,9 @@
 using AccountingService.Api.Contracts.v1.Requests;
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
-using Credit.NetCore.Framework.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AccountingService.Api.Controllers
 {

@@ -1,5 +1,5 @@
 using AccountingService.Domain.Commands;
-using Credit.NetCore.Framework.Extensions;
+using AccountingService.Domain.Extensions;
 using FluentValidation;
 
 namespace AccountingService.Domain.Validators.Commands;
@@ -20,7 +20,7 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
 
 
         RuleFor(x => x.Document)
-            .Cascade(FluentValidation.CascadeMode.Continue)
+            .Cascade(CascadeMode.Continue)
 
             .NotEmpty()
             .WithMessage("The Document is required")

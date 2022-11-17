@@ -1,7 +1,6 @@
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Notifications;
-using Credit.NetCore.Framework.Extensions.Newtonsoft;
 using MediatR;
 using Newtonsoft.Json;
 

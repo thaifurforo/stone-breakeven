@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Credit.NetCore.Framework.Extensions" Version="5.45.0-preview.9" />
-      <PackageReference Include="DateOnlyTimeOnly.AspNet" Version="2.0.0-preview.1" />
+      <PackageReference Include="DateOnlyTimeOnly.AspNet" Version="2.0.0" />
+      <PackageReference Include="FluentValidation" Version="11.0.2" />
       <PackageReference Include="MediatR" Version="11.0.0" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-rc.2.22472.11" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta3" />
       <PackageReference Include="System.Runtime" Version="4.3.1" />
     </ItemGroup>
 
