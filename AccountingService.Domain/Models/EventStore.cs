@@ -11,4 +11,8 @@ public class EventStore
         EventName = eventName;
         Metadata = metadata;
     }
+
+    public EventStore()
+    {
+    }
 }
