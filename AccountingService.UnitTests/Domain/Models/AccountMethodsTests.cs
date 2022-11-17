@@ -8,7 +8,8 @@ public class AccountMethodsTests
 {
     
     private static readonly Fixture _fixture = new();
-    
+    private static readonly DateTime? NullDateTime = null;
+
     [Fact]
     public void CreateAccount_GivenAnyIdNumber_ShouldAccountNumberBeCorrectlyGenerated()
     {
@@ -38,4 +39,36 @@ public class AccountMethodsTests
         
         account.Number.Should().Be(expectedAccountNumber);
     }
+    
+    public static readonly object[][] TheoryData =
+    {
+        new object[] { DateTime.Now.AddDays(-1), true, 0, true},
+        new object[] { DateTime.Now.AddDays(1), true, 0, false},
+        new object[] { DateTime.Now.AddDays(-1), false, 0, false},
+        new object[] { DateTime.Now.AddDays(-1), true, 10, false},
+    };
+    [Theory, MemberData(nameof(TheoryData))]
+    public void DeactivateAccount_GivenAccount_ShouldReturnExpected(DateTime openingDate, bool isActive, decimal balance, bool expected)
+    {
+        var account = _fixture.Build<Account>()
+            .With(x => x.OpeningDate, openingDate)
+            .With(x => x.IsActive, isActive)
+            .With(x => x.Balance, balance)
+            .With(x => x.ClosingDate, NullDateTime)
+            .Create();
+
+        var result = true;
+        
+        try
+        {
+            account.DeactivateAccount();
+        }
+        catch (Exception ex)
+        {
+            result = false;
+        }
+        
+        Assert.Equal(expected, result);
+    }
+    
 }
