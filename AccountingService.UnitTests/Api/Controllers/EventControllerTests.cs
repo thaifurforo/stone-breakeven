@@ -36,6 +36,7 @@ public class EventControllerTests : IAsyncLifetime
         var fixture = new Fixture();
         _event = fixture.Build<EventStore>()
             .With(x => x.Metadata, "{\"Id\":1}")
+            .With(x => x.EventName, "xpto")
             .Create();
     }
 
@@ -51,7 +52,7 @@ public class EventControllerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async void GetAllEvents()
+    public async void GetAllEventsTest()
     {
         // When
         var result = await _eventController.GetAllEvents();
@@ -61,7 +62,7 @@ public class EventControllerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async void GetEventById()
+    public async void GetEventByIdTest()
     {
         // When
         var request = new GetByEventId() { Id = _event.EventStoreId.ToString() };
@@ -72,7 +73,7 @@ public class EventControllerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async void GetEventByAccountId()
+    public async void GetEventByAccountIdTest()
     {
   
         // When
@@ -83,5 +84,16 @@ public class EventControllerTests : IAsyncLifetime
         result.Should().BeOfType<OkObjectResult>();
     }
 
+    [Fact]
+    public async void GetEventByNameTest()
+    {
+  
+        // When
+        var request = new GetByEventName() { EventName = "xpto" };
+        var result = await _eventController.GetEventByName(request);
+
+        // Then
+        result.Should().BeOfType<OkObjectResult>();
+    }
 }
 
