@@ -1,12 +1,13 @@
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
+using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using MediatR;
 using Newtonsoft.Json;
 
 namespace AccountingService.Domain.CommandHandlers;
 
-public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccountCommand, string>
+public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccountCommand, object>
 {
     private readonly IMediator _mediator;
     private readonly IAccountRepository _repository;
@@ -17,7 +18,7 @@ public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccount
         this._repository = repository;
     }
 
-    public async Task<string> Handle(DeactivateAccountCommand request, CancellationToken cancellationToken)
+    public async Task<object> Handle(DeactivateAccountCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -29,8 +30,7 @@ public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccount
             await _mediator.Publish(new DeactivatedAccountEvent { Id = account.Id, Number = account.Number, 
                 Agency = account.Agency, Balance = account.Balance, IsActive = account.IsActive, 
                 OpeningDate = account.OpeningDate, ClosingDate = account.ClosingDate, Document = account.Document});
-            return await Task.FromResult($"Account successfully deactivated\n" +
-                                         $"{JsonConvert.SerializeObject(account)}");
+            return await Task.FromResult(account);
 
         }
         catch (Exception ex)

@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace AccountingService.Domain.CommandHandlers;
 
-public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, string>
+public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, object>
 {
     private readonly IMediator _mediator;
     private readonly ITransactionRepository _repository;
@@ -24,7 +24,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         _validator = validator;
     }
     
-    public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
+    public async Task<object> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
     {
 
         try
@@ -81,8 +81,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
                 DebitAccountId = transaction.DebitAccountId, Amount = transaction.Amount, 
                 TransactionDate = transaction.TransactionDate});
 
-            return await Task.FromResult($"Transaction successfully created" +
-                                         $"\n{JsonConvert.SerializeObject(transaction)}");
+            return await Task.FromResult(transaction);
         }
         
         catch (Exception ex)

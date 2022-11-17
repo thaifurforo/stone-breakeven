@@ -2,7 +2,7 @@ using MediatR;
 
 namespace AccountingService.Domain.Commands;
 
-public class CreateTransactionCommand : IRequest<string>
+public class CreateTransactionCommand : IRequest<object>
 {
     public string TransactionType { get; set; }
     public int? CreditAccountId { get; set; }

@@ -4,11 +4,10 @@ using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using FluentValidation;
 using MediatR;
-using Newtonsoft.Json;
 
 namespace AccountingService.Domain.CommandHandlers;
 
-public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, string>
+public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, object>
 {
     private readonly IMediator _mediator;
     private readonly IAccountRepository _repository;
@@ -21,9 +20,8 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
         _validator = validator;
     }
     
-    public async Task<string> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+    public async Task<object> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
     {
-
         try
         {
             await _validator.ValidateAndThrowAsync(request, cancellationToken);
@@ -49,8 +47,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
                 Agency = account.Agency, Balance = account.Balance, IsActive = account.IsActive, 
                 OpeningDate = account.OpeningDate, ClosingDate = account.ClosingDate, Document = account.Document});
 
-            return await Task.FromResult($"Account successfully created" +
-                                         $"\n{JsonConvert.SerializeObject(account)}");
+            return await Task.FromResult(account);
         }
         
         catch (Exception ex)
