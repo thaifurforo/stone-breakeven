@@ -60,6 +60,20 @@ namespace TransactioningService.Api.Controllers
 
             return Ok(events);
         }
+        
+        // GET: api/event/name/CreatedAccountEvent
+        [HttpGet("name/{eventName}")]
+        public async Task<IActionResult> GetEventByName([FromRoute] GetByEventName request)
+        {
+            var events = await _eventStoreRepository.GetEventsByName(request.EventName);
+
+            if (events.IsNullOrEmpty())
+            {
+                return NotFound(new { message = "There's no event under that name in the database" });
+            }
+
+            return Ok(events);
+        }
 
     }
 }

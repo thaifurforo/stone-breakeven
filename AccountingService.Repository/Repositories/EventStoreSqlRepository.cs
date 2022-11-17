@@ -21,7 +21,7 @@ namespace AccountingService.Repository.Repositories
 
         public async Task<EventStore?> GetEventById(Guid id)
         {
-            return await Task.Run(() => _eventStoreSqlContext.EventMetaData.Find(id));
+            return await await Task.Run(() => _eventStoreSqlContext.EventMetaData.FindAsync(id));
         }
         
         public async Task<IEnumerable<EventStore?>> GetEventsByAccountId(int id)
@@ -31,7 +31,13 @@ namespace AccountingService.Repository.Repositories
                             || x.Metadata.Contains($"AccountId\":{id}"));
             return await Task.Run(() => query.ToListAsync());
         }
-        
+
+        public async Task<IEnumerable<EventStore?>> GetEventsByName(string eventName)
+        {
+            return await Task.Run(() =>
+                _eventStoreSqlContext.EventMetaData.Where(x => x.EventName == eventName).ToList());
+        }
+
         public async Task<EventStore> AddEvent(EventStore eventStore)
         {
             return await Task.Run(() => _eventStoreSqlContext.EventMetaData.Add(eventStore).Entity);
