@@ -14,7 +14,7 @@ namespace AccountingService.Repository.Repositories
             _readModelInMemoryContext = readModelInMemoryContext ?? throw new ArgumentNullException(nameof(readModelInMemoryContext));
         }
 
-        public async Task<Account?> GetAccountById(int id)
+        public async Task<Account?> GetAccountById(int? id)
         {
             return await Task.Run(() => _readModelInMemoryContext.Accounts.Find(id));
         }
@@ -47,7 +47,7 @@ namespace AccountingService.Repository.Repositories
             await Task.Run(() => _readModelInMemoryContext.SaveChanges(true));
         }
 
-        public async Task<Account> GetAccountById(int? transactionAccountId)
+        public async Task<Account> GetAccountById(int transactionAccountId)
         {
             return (await Task.Run(() => _readModelInMemoryContext.Accounts.Find(transactionAccountId)))!;
         }

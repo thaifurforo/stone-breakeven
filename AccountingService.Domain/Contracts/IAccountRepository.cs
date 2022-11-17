@@ -7,11 +7,10 @@ namespace AccountingService.Domain.Contracts
     {
 
         Task<IEnumerable<Account>> GetAllAccounts();
-        Task<Account?> GetAccountById(int id);
+        Task<Account?> GetAccountById(int? id);
         Task<Account> AddAccount(Account account);
         Task<Account> UpdateAccount(Account account);
         Task<Account> DeactivateAccount(int id);
-        Task Save();
-        Task<Account> GetAccountById(int? requestCreditAccountId);
+        Task Save(); 
     }
 }
