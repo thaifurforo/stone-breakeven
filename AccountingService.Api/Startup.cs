@@ -1,7 +1,7 @@
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Validators.Commands;
-using AccountingService.Repository;
+using AccountingService.Repository.Contexts;
 using AccountingService.Repository.Repositories;
 using FluentValidation;
 using MediatR;

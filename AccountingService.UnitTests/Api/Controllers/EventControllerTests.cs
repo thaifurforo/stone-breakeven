@@ -1,9 +1,7 @@
 using AccountingService.Api.Contracts.v1.Requests;
-using AccountingService.Api.Controllers;
-using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
-using AccountingService.Repository;
+using AccountingService.Repository.Contexts;
 using AccountingService.Repository.Repositories;
 using AutoFixture;
 using FluentAssertions;

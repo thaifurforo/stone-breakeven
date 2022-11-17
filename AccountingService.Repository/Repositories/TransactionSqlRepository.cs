@@ -1,5 +1,6 @@
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
+using AccountingService.Repository.Contexts;
 
 namespace AccountingService.Repository.Repositories
 {

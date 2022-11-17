@@ -4,7 +4,7 @@ using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using AccountingService.Domain.Validators.Commands;
-using AccountingService.Repository;
+using AccountingService.Repository.Contexts;
 using AccountingService.Repository.Repositories;
 using AutoFixture;
 using FluentAssertions;

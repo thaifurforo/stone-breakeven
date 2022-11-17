@@ -1,6 +1,6 @@
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
-using Dasync.Collections;
+using AccountingService.Repository.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccountingService.Repository.Repositories

@@ -1,7 +1,7 @@
 using AccountingService.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountingService.Repository;
+namespace AccountingService.Repository.Contexts;
 
 public class EventStoreSqlContext : DbContext
 {
