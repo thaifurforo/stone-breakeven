@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:23508",
+      "sslPort": 44314
+    }
+  },
+  "profiles": {
+    "AccountingService.Api": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "",
+      "applicationUrl": "https://localhost:{https_port};http://localhost:{http_port}",
+      "environmentVariables": {
+        "ConnectionStrings__ReadModelSqlConnection": "Server={localhost,port};Initial Catalog=AccountReadModelDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True",
+        "ConnectionStrings__EventStoreSqlConnection": "Server={localhost,port};Initial Catalog=AccountEventStoreDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+      }
+    }
+  }
+}{
+}

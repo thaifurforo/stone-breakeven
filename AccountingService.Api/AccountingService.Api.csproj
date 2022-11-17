@@ -18,4 +18,8 @@
       <ProjectReference Include="..\AccountingService.Repository\AccountingService.Repository.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="Properties\launchSettings.json" />
+    </ItemGroup>
+
 </Project>
