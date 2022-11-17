@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using AccountingService.Domain.Contracts;
-using AccountingService.Domain.Models;
+﻿using AccountingService.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AccountingService.Repository;
+namespace AccountingService.Repository.Contexts;
 
 public class ReadModelInMemoryContext : DbContext
 {
