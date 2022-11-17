@@ -33,7 +33,7 @@ public partial class Account
     {
         var genericCurrentDate = DateTime.Now;
 
-        if (ClosingDate < OpeningDate)
+        if (genericCurrentDate < OpeningDate)
         {
             throw new BadHttpRequestException($"Invalid request: Closing date must be equal or greater than opening date. Please, try again.");
         }
