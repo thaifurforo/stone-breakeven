@@ -43,6 +43,7 @@ public class DeactivateAccountCommandHandlerTests
     {
         // When
         var @event = _fixture.Create<DeactivateAccountCommand>();
+        _repository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(_account);
         await _handler.Handle(@event, CancellationToken.None);
         
         // Then

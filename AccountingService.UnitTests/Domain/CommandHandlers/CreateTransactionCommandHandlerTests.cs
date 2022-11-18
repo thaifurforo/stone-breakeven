@@ -8,6 +8,7 @@ using AutoFixture;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -47,6 +48,7 @@ public class CreateTransactionCommandHandlerTests
     public async void Handle_GivenAValidCommand_ShouldCreateTransactionAndSaveChanges()
     {
         // When
+        _accountRepository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(Account1);
         await _handler.Handle(_command, CancellationToken.None);
         
         // Then
@@ -93,7 +95,16 @@ public class CreateTransactionCommandHandlerTests
         (command,
             opt => opt.IncludeAllRuleSets(),
             It.IsAny<CancellationToken>());
-        await _handler.Handle(command, CancellationToken.None);
+
+        try
+        {
+            await _handler.Handle(command, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            ex.Should().BeOfType<BadHttpRequestException>();
+            Assert.False(expectedValidation);
+        }
         
         // Then
         _mediator.Verify(x => x.Publish(It.IsAny<CreatedTransactionEvent>(), 
@@ -124,11 +135,18 @@ public class CreateTransactionCommandHandlerTests
             { TransactionType = transactionType, CreditAccountId = creditAccountId, DebitAccountId = debitAccountId };
     
         // When
-        var handlerResult = await _handler.Handle(command, CancellationToken.None);
+        try
+        {
+            await _handler.Handle(command, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            // Then
+            ex.Should().BeOfType<BadHttpRequestException>();
+        }
         
         // Then
         _mediator.Verify(x => x.Publish(It.IsAny<CreatedTransactionEvent>(), 
             It.IsAny<CancellationToken>()), Times.Never);
-        handlerResult.Should().BeOfType<BadRequestObjectResult>();
     }
 }

@@ -7,6 +7,7 @@ using AutoFixture;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Moq;
 
 namespace AccountingService.UnitTests.Domain.CommandHandlers;
@@ -49,8 +50,16 @@ public class CreateAccountCommandHandlerTests
         (command,
             opt => opt.IncludeAllRuleSets(),
             It.IsAny<CancellationToken>());
-        await _handler.Handle(command, CancellationToken.None);
-        
+        try
+        {
+            await _handler.Handle(command, CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            ex.Should().BeOfType<BadHttpRequestException>();
+            Assert.False(expectedValidation);
+        }
+
         // Then
         _mediator.Verify(x => x.Publish(It.IsAny<CreatedAccountEvent>(), 
             It.IsAny<CancellationToken>()), Times.Exactly(expectedPublish));
