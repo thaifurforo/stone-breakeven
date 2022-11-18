@@ -46,33 +46,46 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
 
             if (request.CreditAccountId != null)
             {
-                var creditAccount = _accountRepository.GetAccountById(request.CreditAccountId).Result;
-                if (!creditAccount.IsActive)
+                var creditAccount = await _accountRepository.GetAccountById(request.CreditAccountId);
+                if (creditAccount != null)
                 {
-                    throw new BadHttpRequestException(message: "The Credit Account informed is not active. Try again.");
-                }
-                else
-                {
+                    if (!creditAccount.IsActive)
+                    {
+                        throw new BadHttpRequestException(
+                            message: "The Credit Account informed is not active. Try again.");
+                    }
+
                     creditAccount.Balance += request.Amount;
                     creditAccount.Transactions.Add(transaction);
                     await _accountRepository.UpdateAccount(creditAccount);
                     await _accountRepository.Save();
+                }
+                else
+                {
+                    throw new BadHttpRequestException(
+                        message: "The CreditAccountId informed doesn't exist in the database.");
                 }
             }
 
             if (request.DebitAccountId != null)
             {
                 var debitAccount = _accountRepository.GetAccountById(request.DebitAccountId).Result;
-                if (!debitAccount.IsActive)
+                if (debitAccount != null)
                 {
-                    throw new BadHttpRequestException(message: "The Debit Account informed is not active. Try again.");
-                }
-                else
-                {
+                    if (!debitAccount.IsActive)
+                    {
+                        throw new BadHttpRequestException(
+                            message: "The Debit Account informed is not active. Try again.");
+                    }
                     debitAccount.Balance -= request.Amount;
                     debitAccount.Transactions.Add(transaction);
                     await _accountRepository.UpdateAccount(debitAccount);
                     await _accountRepository.Save();
+                }
+                else
+                {
+                    throw new BadHttpRequestException(
+                        message: "The DebitAccountId informed doesn't exist in the database.");
                 }
             }
             
