@@ -55,7 +55,7 @@ namespace AccountingService.Api.Controllers
 
             var result = await _mediator.Send(command);
 
-            return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created };
+            return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
 
         }
 
@@ -66,7 +66,7 @@ namespace AccountingService.Api.Controllers
                 var obj = new DeactivateAccountCommand { Id = request.Id };
                 var result = await _mediator.Send(obj);
 
-                return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created }; 
+                return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created }; 
         }
     }
 }

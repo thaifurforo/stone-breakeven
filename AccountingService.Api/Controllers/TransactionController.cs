@@ -98,6 +98,6 @@ public class TransactionController : ControllerBase
 
         var result = await _mediator.Send(command);
 
-        return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created };
+        return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
     }
 }
