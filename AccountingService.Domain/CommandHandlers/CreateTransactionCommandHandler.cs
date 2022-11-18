@@ -4,7 +4,8 @@ using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace AccountingService.Domain.CommandHandlers;
 
@@ -33,7 +34,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         catch (Exception ex)
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
-            return await Task.FromResult(new BadRequestObjectResult($"There's been a validation error on the creation of the transaction: {ex.Message}"));
+            return await Task.FromResult($"There's been a validation error on the creation of the transaction: {ex.Message}");
         }
         
         try
@@ -50,8 +51,8 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
                 {
                     if (!creditAccount.IsActive)
                     {
-                        return await Task.FromResult(
-                            new BadRequestObjectResult("The Credit Account informed is not active. Try again."));
+                        throw new BadHttpRequestException(
+                            message: "The Credit Account informed is not active. Try again.");
                     }
 
                     creditAccount.Balance += request.Amount;
@@ -61,8 +62,8 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
                 }
                 else
                 {
-                    return await Task.FromResult(
-                        new BadRequestObjectResult("The CreditAccountId informed doesn't exist in the database."));
+                    throw new BadHttpRequestException(
+                        message: "The CreditAccountId informed doesn't exist in the database.");
                 }
             }
 
@@ -73,8 +74,8 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
                 {
                     if (!debitAccount.IsActive)
                     {
-                        return await Task.FromResult(
-                            new BadRequestObjectResult("The Debit Account informed is not active. Try again."));
+                        throw new BadHttpRequestException(
+                            message: "The Debit Account informed is not active. Try again.");
                     }
                     debitAccount.Balance -= request.Amount;
                     debitAccount.Transactions.Add(transaction);
@@ -83,8 +84,8 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
                 }
                 else
                 {
-                    return await Task.FromResult(
-                        new BadRequestObjectResult("The DebitAccountId informed doesn't exist in the database."));
+                    throw new BadHttpRequestException(
+                        message: "The DebitAccountId informed doesn't exist in the database.");
                 }
             }
             
