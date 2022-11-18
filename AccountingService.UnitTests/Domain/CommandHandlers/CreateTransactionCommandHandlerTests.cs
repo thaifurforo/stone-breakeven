@@ -25,10 +25,11 @@ public class CreateTransactionCommandHandlerTests
     private readonly CreateTransactionCommandHandler _handler;
     private readonly IValidator<CreateTransactionCommand> _validator;
 
-    // private static readonly int? GenericNullInt = null;
-    // private const string DepositTransactionType = "deposit";
-    private static readonly Account Account1 = new();
-    private static readonly Account Account2 = new();
+    private static readonly int? GenericNullInt = null;
+    private const string DepositTransactionType = "deposit";
+    private static readonly Account Account1 = new() { IsActive = true };
+    private static readonly Account Account2 = new() { IsActive = true };
+    private static readonly Account Account3 = new() { IsActive = false };
     
     private readonly CreateTransactionCommand _command;
 
@@ -44,9 +45,9 @@ public class CreateTransactionCommandHandlerTests
         _handler = new(_mediator.Object, _repository.Object, _accountRepository.Object, _validator);
         
         _command = _fixture.Build<CreateTransactionCommand>()
-            // .With(x => x.TransactionType, DepositTransactionType)
-            // .With(x => x.CreditAccountId, _account1.Id)
-            // .With(x => x.DebitAccountId, GenericNullInt)
+            .With(x => x.TransactionType, DepositTransactionType)
+            .With(x => x.CreditAccountId, Account1.Id)
+            .With(x => x.DebitAccountId, GenericNullInt)
             .Create();
     }
     
@@ -64,7 +65,7 @@ public class CreateTransactionCommandHandlerTests
     public async void CreateTransactionCommandHandlerTest()
     {
         // When
-        _mediator.Setup(x => x.Send(It.IsAny<CreateAccountCommand>(), CancellationToken.None)).ReturnsAsync(_command);
+        _accountRepository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(Account1);
         await _handler.Handle(_command, CancellationToken.None);
         
         // Then
@@ -83,6 +84,8 @@ public class CreateTransactionCommandHandlerTests
         new object[] { Account1.Id, Account2.Id, "withdraw", false, 0},
         new object?[] { null, Account2.Id, "deposit", false, 0},
         new object?[] { Account1.Id, null, "withdraw", false, 0},
+        new object?[] { Account3.Id, null, "deposit", false, 0},
+
     };
     [Theory, MemberData(nameof(TheoryData))]
     public async void CreateTransactionCommandHandler_GivenRequest_ShouldReturnExpected(int? creditAccountId, int? debitAccountId, string transactionType,
