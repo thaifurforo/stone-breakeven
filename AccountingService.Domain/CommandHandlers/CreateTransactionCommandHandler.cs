@@ -34,7 +34,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         catch (Exception ex)
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
-            return await Task.FromResult($"There's been a validation error on the creation of the transaction: {ex.Message}");
+            throw new BadHttpRequestException($"There's been a validation error on the creation of the transaction: {ex.Message}");
         }
         
         try
@@ -101,7 +101,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
 
-            return await Task.FromResult($"There's been an error on the creation of the transaction: {ex.Message}");
+            throw new BadHttpRequestException($"There's been an error on the creation of the transaction: {ex.Message}");
         }
     }
 }
