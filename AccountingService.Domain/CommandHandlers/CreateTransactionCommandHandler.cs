@@ -30,15 +30,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
         try
         {
             await _validator.ValidateAndThrowAsync(request, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
-            throw new BadHttpRequestException($"There's been a validation error on the creation of the transaction: {ex.Message}");
-        }
-        
-        try
-        {
+            
             var transaction = new Transaction(request.TransactionType, request.Amount, request.CreditAccountId, request.DebitAccountId);
             
             await _repository.AddTransaction(transaction);
