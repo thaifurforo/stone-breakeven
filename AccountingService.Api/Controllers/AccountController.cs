@@ -17,8 +17,8 @@ namespace AccountingService.Api.Controllers
    
         public AccountController(IAccountRepository accountRepository, IMediator mediator)
         {
-            this._accountRepository = accountRepository;
-            this._mediator = mediator;
+            _accountRepository = accountRepository;
+            _mediator = mediator;
         }
 
         // GET: api/account
@@ -53,9 +53,15 @@ namespace AccountingService.Api.Controllers
         public async Task<IActionResult> CreateAccount([FromBody] CreateAccountCommand command)
         {
 
-            var result = await _mediator.Send(command);
-
-            return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
+            try
+            { 
+                var result = await _mediator.Send(command);
+                return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
 
         }
 
@@ -63,10 +69,17 @@ namespace AccountingService.Api.Controllers
         [HttpPost("{id}/deactivate")]
         public async Task<IActionResult> DeactivateAccount([FromRoute] GetByAccountId request)
         {
+            try
+            {
                 var obj = new DeactivateAccountCommand { Id = request.Id };
                 var result = await _mediator.Send(obj);
 
-                return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created }; 
+                return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message);
+            }
         }
     }
 }

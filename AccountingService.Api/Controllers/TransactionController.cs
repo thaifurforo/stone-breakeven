@@ -96,8 +96,15 @@ public class TransactionController : ControllerBase
     public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionCommand command)
     {
 
-        var result = await _mediator.Send(command);
+        try
+        {
+            var result = await _mediator.Send(command);
 
-        return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
+            return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
+        }
+        catch (Exception ex)
+        {
+            return new BadRequestObjectResult(ex.Message);
+        }
     }
 }
