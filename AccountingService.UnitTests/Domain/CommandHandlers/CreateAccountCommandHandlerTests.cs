@@ -39,7 +39,7 @@ public class CreateAccountCommandHandlerTests
     [InlineData("001", "12345678000900", false, 0)]
     [InlineData("001", "1234567890123456", false, 0)]
     [InlineData("abc", "12345678909", false, 0)]
-    public async void CreateAccountCommandHandler_GivenRequest_ShouldReturnExpected(string agency, string document,
+    public async void CreateAccountCommandHandler_GivenAndValidatedRequest_ShouldReturnExpected(string agency, string document,
         bool expectedValidation, int expectedPublish)
     {
         var command = new CreateAccountCommand() { Agency = agency, Document = document };

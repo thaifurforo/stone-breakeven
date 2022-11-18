@@ -4,13 +4,11 @@ using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using AccountingService.Domain.Validators.Commands;
-using AccountingService.Repository.Contexts;
-using AccountingService.Repository.Repositories;
 using AutoFixture;
 using FluentAssertions;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 
 namespace AccountingService.UnitTests.Domain.CommandHandlers;
@@ -27,20 +25,14 @@ public class CreateTransactionCommandHandlerTests
 
     private static readonly int? GenericNullInt = null;
     private const string DepositTransactionType = "deposit";
-    private static readonly Account Account1 = new() { IsActive = true };
-    private static readonly Account Account2 = new() { IsActive = true };
-    private static readonly Account Account3 = new() { IsActive = false };
+    private static readonly Account  Account1 = new() { IsActive = true , Id = 1};
+    private static readonly Account Account2 = new() { IsActive = true , Id = 2};
+    private static readonly Account Account3 = new() { IsActive = false , Id = 3};
     
     private readonly CreateTransactionCommand _command;
 
     public CreateTransactionCommandHandlerTests()
     {
-        // var options = new DbContextOptionsBuilder<ReadModelSqlContext>()
-        //     .UseInMemoryDatabase(databaseName: "FakeDatabase")
-        //     .Options;
-        // var readModelSqlContext = new ReadModelSqlContext(options);
-        // _accountRepository = new AccountSqlRepository(readModelSqlContext);
-
         _validator = new CreateTransactionCommandValidator();
         _handler = new(_mediator.Object, _repository.Object, _accountRepository.Object, _validator);
         
@@ -49,7 +41,7 @@ public class CreateTransactionCommandHandlerTests
             .With(x => x.CreditAccountId, Account1.Id)
             .With(x => x.DebitAccountId, GenericNullInt)
             .Create();
-    }
+        }
     
     [Fact]
     public async void Handle_GivenAValidCommand_ShouldCreateTransactionAndSaveChanges()
@@ -74,31 +66,29 @@ public class CreateTransactionCommandHandlerTests
     }
 
     // Given
-    public static List<object?[]> StartParams => new()
+    public static List<object?[]> TheoryData => new()
     {
-        new object[] { Account1.Id, Account2.Id, "transfer", true, 1},
-        new object[] { Account1.Id, Account1.Id, "transfer", false, 0},
-        new object?[] { Account1.Id, null, "deposit", true, 1},
-        new object?[] { null, Account2.Id, "withdraw", true, 1},
-        new object[] { Account1.Id, Account2.Id, "deposit", false, 0},
-        new object[] { Account1.Id, Account2.Id, "withdraw", false, 0},
-        new object?[] { null, Account2.Id, "deposit", false, 0},
-        new object?[] { Account1.Id, null, "withdraw", false, 0},
-        new object?[] { Account3.Id, null, "deposit", false, 0},
-
+        new object[] { Account1.Id, Account2.Id, "transfer", true, 1, 0},
+        new object[] { Account1.Id, Account1.Id, "transfer", false, 0, 1},
+        new object?[] { Account1.Id, null, "deposit", true, 1, 0},
+        new object?[] { null, Account2.Id, "withdraw", true, 1, 0},
+        new object[] { Account1.Id, Account2.Id, "deposit", false, 0, 1},
+        new object[] { Account1.Id, Account2.Id, "withdraw", false, 0, 1},
+        new object?[] { null, Account2.Id, "deposit", false, 0, 1},
+        new object?[] { Account1.Id, null, "withdraw", false, 0, 1},
     };
     [Theory, MemberData(nameof(TheoryData))]
-    public async void CreateTransactionCommandHandler_GivenRequest_ShouldReturnExpected(int? creditAccountId, int? debitAccountId, string transactionType,
-        bool expectedValidation, int expectedPublish)
+    public async void CreateTransactionCommandHandler_GivenAndValidatedRequest_ShouldReturnExpected(int? creditAccountId, int? debitAccountId, string transactionType,
+        bool expectedValidation, int expectedCreatedEvent, int expectedErrorEvent)
     {
         // Given
-    var command = new CreateTransactionCommand()
+        _accountRepository.Setup(x => x.GetAccountById(Account1.Id)).ReturnsAsync(Account1);
+        _accountRepository.Setup(x => x.GetAccountById(Account2.Id)).ReturnsAsync(Account2);
+        _accountRepository.Setup(x => x.GetAccountById(Account3.Id)).ReturnsAsync(Account3);
+        var command = new CreateTransactionCommand()
             { TransactionType = transactionType, CreditAccountId = creditAccountId, DebitAccountId = debitAccountId };
     
         // When
-        _accountRepository.Setup(x => x.GetAccountById(Account1.Id)).ReturnsAsync(Account1);
-        _accountRepository.Setup(x => x.GetAccountById(Account2.Id)).ReturnsAsync(Account2);
-        
         var validationResult = await _validator.ValidateAsync
         (command,
             opt => opt.IncludeAllRuleSets(),
@@ -107,7 +97,38 @@ public class CreateTransactionCommandHandlerTests
         
         // Then
         _mediator.Verify(x => x.Publish(It.IsAny<CreatedTransactionEvent>(), 
-            It.IsAny<CancellationToken>()), Times.Exactly(expectedPublish));
+            It.IsAny<CancellationToken>()), Times.Exactly(expectedCreatedEvent));
+        _mediator.Verify(x => x.Publish(It.IsAny<ErrorEvent>(), 
+            It.IsAny<CancellationToken>()), Times.Exactly(expectedErrorEvent));
         validationResult.IsValid.Should().Be(expectedValidation);
+    }
+    
+    // Given
+    public static List<object?[]> TheoryData2 => new()
+    {
+        new object[] { Account1.Id, Account1.Id, "transfer"},
+        new object[] { Account1.Id, Account2.Id, "deposit"},
+        new object[] { Account1.Id, Account2.Id, "withdraw"},
+        new object?[] { null, Account2.Id, "deposit"},
+        new object?[] { Account1.Id, null, "withdraw"},
+        new object?[] { Account3.Id, null, "deposit"},
+    };
+    [Theory, MemberData(nameof(TheoryData2))]
+    public async void CreateTransactionCommandHandler_GivenInvalidRequest_ShouldReturnExpected(int? creditAccountId, int? debitAccountId, string transactionType)
+    {
+        // Given
+        _accountRepository.Setup(x => x.GetAccountById(Account1.Id)).ReturnsAsync(Account1);
+        _accountRepository.Setup(x => x.GetAccountById(Account2.Id)).ReturnsAsync(Account2);
+        _accountRepository.Setup(x => x.GetAccountById(Account3.Id)).ReturnsAsync(Account3);
+        var command = new CreateTransactionCommand()
+            { TransactionType = transactionType, CreditAccountId = creditAccountId, DebitAccountId = debitAccountId };
+    
+        // When
+        var handlerResult = await _handler.Handle(command, CancellationToken.None);
+        
+        // Then
+        _mediator.Verify(x => x.Publish(It.IsAny<CreatedTransactionEvent>(), 
+            It.IsAny<CancellationToken>()), Times.Never);
+        handlerResult.Should().BeOfType<BadRequestObjectResult>();
     }
 }
