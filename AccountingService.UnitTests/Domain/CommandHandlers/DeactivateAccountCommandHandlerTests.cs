@@ -4,7 +4,6 @@ using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using AccountingService.Repository.Contexts;
-using AccountingService.Repository.Repositories;
 using AutoFixture;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +16,8 @@ public class DeactivateAccountCommandHandlerTests
     // Given
     
     private readonly Fixture _fixture = new();
-    private readonly Mock<IAccountRepository> _mockRepository = new();
-    private readonly IAccountRepository _repository;
+    private readonly Mock<IAccountRepository> _repository = new();
     private readonly Mock<IMediator> _mediator = new();
-    private readonly DeactivateAccountCommandHandler _mockHandler;
     private readonly DeactivateAccountCommandHandler _handler;
 
     private readonly Account _account;
@@ -31,12 +28,13 @@ public class DeactivateAccountCommandHandlerTests
             .UseInMemoryDatabase(databaseName: "FakeDatabase")
             .Options;
         var readModelSqlContext = new ReadModelSqlContext(options);
-        _repository = new AccountSqlRepository(readModelSqlContext);
 
-        _mockHandler = new(_mediator.Object, _mockRepository.Object);
-        _handler = new(_mediator.Object, _repository);
+        _handler = new(_mediator.Object, _repository.Object);
 
-        _account = _fixture.Build<Account>().Create();
+        _account = _fixture.Build<Account>()
+            .With(x => x.OpeningDate, DateTime.Now)
+            .With(x => x.Balance, 0)
+            .Create();
     }
 
 
@@ -45,48 +43,18 @@ public class DeactivateAccountCommandHandlerTests
     {
         // When
         var @event = _fixture.Create<DeactivateAccountCommand>();
-        await _mockHandler.Handle(@event, CancellationToken.None);
+        await _handler.Handle(@event, CancellationToken.None);
         
         // Then
-        _mockRepository.Verify(x => x.Save(), Times.Once);
+        _repository.Verify(x => x.Save(), Times.Once);
         
-    }
-
-    // Given
-    public static readonly object[][] TheoryData =
-    {
-        new object[] { DateTime.Now.AddDays(-1), 0, 1},
-        new object[] { DateTime.Now.AddDays(1), 0, 0},
-        new object[] { DateTime.Now.AddDays(-1), 1, 0},
-        new object[] { DateTime.Now.AddDays(-1), -1, 0},
-    };
-    [Theory, MemberData(nameof(TheoryData))]
-    public async void DeactivateAccountCommandHandler_GivenRequest_ShouldReturnExpected(DateTime openingDate, decimal balance, int expected)
-    {
-        
-        // Given
-        _account.OpeningDate = openingDate;
-        _account.Balance = balance;
-        await _repository.AddAccount(_account);
-        await _repository.Save();
-        var command = new DeactivateAccountCommand(){Id = _account.Id};
-  
-        // When
-        await _handler.Handle(command, CancellationToken.None);
-        
-        // Then
-        _mediator.Verify(x => x.Publish(It.IsAny<DeactivatedAccountEvent>(), 
-            It.IsAny<CancellationToken>()), Times.Exactly(expected));
     }
     
     [Fact]
     public async void DeactivateAccountCommandHandlerTest()
     {
         // Given
-        _account.OpeningDate = DateTime.Now.AddDays(-1);
-        _account.Balance = 0;
-        await _repository.AddAccount(_account);
-        await _repository.Save();
+        _repository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(_account);
         var command = new DeactivateAccountCommand(){Id = _account.Id};
         
         // When
