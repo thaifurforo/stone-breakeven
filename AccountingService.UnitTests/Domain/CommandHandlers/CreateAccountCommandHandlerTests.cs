@@ -1,6 +1,7 @@
 using AccountingService.Domain.CommandHandlers;
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
+using AccountingService.Domain.Models;
 using AccountingService.Domain.Notifications;
 using AccountingService.Domain.Validators.Commands;
 using AutoFixture;
@@ -67,7 +68,7 @@ public class CreateAccountCommandHandlerTests
     }
 
     [Fact]
-    public async void CreateAccountCommandHandlerTest()
+    public async void CreateAccountCommandHandler_GivenCommand_ShouldPublishEvent()
     {
         // When
         await _handler.Handle(_command, CancellationToken.None);
@@ -76,9 +77,21 @@ public class CreateAccountCommandHandlerTests
         _mediator.Verify(x => x.Publish(It.IsAny<CreatedAccountEvent>(), 
             It.IsAny<CancellationToken>()), Times.Once);
     }
+    
+    [Fact]
+    public async void CreateAccountCommandHandler_GivenCommand_ShouldMakeChangesToRepository()
+    {
+        // When
+        await _handler.Handle(_command, CancellationToken.None);
+        
+        // Then
+        _repository.Verify(x => x.AddAccount(It.IsAny<Account>()), Times.Once);
+        _repository.Verify(x => x.UpdateAccount(It.IsAny<Account>()), Times.Once);
+        _repository.Verify(x => x.Save(), Times.Exactly(2));
+    }
 
     [Fact]
-    public async void Handle_GivenAValidCommand_ShouldCreateAccountAndSaveChanges()
+    public async void Handle_GivenAValidCommand_ShouldSave()
     {
         // When
         var command = _fixture.Build<CreateAccountCommand>()

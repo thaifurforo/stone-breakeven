@@ -45,7 +45,7 @@ public class CreateTransactionCommandHandlerTests
         }
     
     [Fact]
-    public async void Handle_GivenAValidCommand_ShouldCreateTransactionAndSaveChanges()
+    public async void Handle_GivenAValidCommand_ShouldSave()
     {
         // When
         _accountRepository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(Account1);
@@ -56,7 +56,7 @@ public class CreateTransactionCommandHandlerTests
     }
     
     [Fact]
-    public async void CreateTransactionCommandHandlerTest()
+    public async void CreateTransactionCommandHandler_GivenCommand_ShouldPublishEvent()
     {
         // When
         _accountRepository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(Account1);
@@ -67,6 +67,18 @@ public class CreateTransactionCommandHandlerTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Fact]
+    public async void CreateTransactionCommandHandler_GivenCommand_ShouldMakeChangesToRepository()
+    {
+        // When
+        _accountRepository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(Account1);
+        await _handler.Handle(_command, CancellationToken.None);
+        
+        // Then
+        _repository.Verify(x => x.AddTransaction(It.IsAny<Transaction>()), Times.Once);
+        _repository.Verify(x => x.Save(), Times.Once);
+    }
+    
     // Given
     public static List<object?[]> TheoryData => new()
     {

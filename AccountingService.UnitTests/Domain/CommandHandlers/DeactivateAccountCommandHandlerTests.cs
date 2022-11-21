@@ -18,48 +18,55 @@ public class DeactivateAccountCommandHandlerTests
     private readonly Fixture _fixture = new();
     private readonly Mock<IAccountRepository> _repository = new();
     private readonly Mock<IMediator> _mediator = new();
+    private readonly DeactivateAccountCommand _command;
     private readonly DeactivateAccountCommandHandler _handler;
 
     private readonly Account _account;
 
     public DeactivateAccountCommandHandlerTests()
     {
-        var options = new DbContextOptionsBuilder<ReadModelSqlContext>()
-            .UseInMemoryDatabase(databaseName: "FakeDatabase")
-            .Options;
-        var readModelSqlContext = new ReadModelSqlContext(options);
-
         _handler = new(_mediator.Object, _repository.Object);
 
         _account = _fixture.Build<Account>()
             .With(x => x.OpeningDate, DateTime.Now)
             .With(x => x.Balance, 0)
             .Create();
+
+        _command = _fixture.Build<DeactivateAccountCommand>()
+            .With(x => x.Id, _account.Id)
+            .Create();
     }
 
 
     [Fact]
-    public async void Handle_GivenAValidEvent_ShouldCreateAccountEventAndSaveChanges()
+    public async void Handle_GivenAValidCommand_ShouldSave()
     {
         // When
-        var @event = _fixture.Create<DeactivateAccountCommand>();
         _repository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(_account);
-        await _handler.Handle(@event, CancellationToken.None);
+        await _handler.Handle(_command, CancellationToken.None);
         
         // Then
         _repository.Verify(x => x.Save(), Times.Once);
-        
     }
     
     [Fact]
-    public async void DeactivateAccountCommandHandlerTest()
+    public async void Handle_GivenAValidCommand_ShouldMakeChangesToRepository()
     {
-        // Given
-        _repository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(_account);
-        var command = new DeactivateAccountCommand(){Id = _account.Id};
-        
         // When
-        await _handler.Handle(command, CancellationToken.None);
+        _repository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(_account);
+        await _handler.Handle(_command, CancellationToken.None);
+        
+        // Then
+        _repository.Verify(x => x.DeactivateAccount(It.IsAny<int>()), Times.Once);
+    }
+    
+    [Fact]
+    public async void DeactivateAccountCommandHandler_GivenValidCommand_ShouldPublishEvent()
+    {
+      
+        // When
+        _repository.Setup(x => x.GetAccountById(It.IsAny<int>())).ReturnsAsync(_account);
+        await _handler.Handle(_command, CancellationToken.None);
         
         // Then
         _mediator.Verify(x => x.Publish(It.IsAny<DeactivatedAccountEvent>(), 
