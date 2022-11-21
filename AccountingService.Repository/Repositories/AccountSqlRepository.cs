@@ -15,14 +15,6 @@ namespace AccountingService.Repository.Repositories
             _readModelSqlContext = readModelSqlContext ?? throw new ArgumentNullException(nameof(readModelSqlContext));
         }
 
-        public async Task<Account?> GetAccountById(int id)
-        {
-            var account = _readModelSqlContext.Account
-                .Where(x => x.Id == id)
-                .Include(x => x.Transactions);
-            return await await Task.FromResult(account.FirstOrDefaultAsync());
-        }
-
         public async Task<IEnumerable<Account>> GetAllAccounts()
         {
             var accounts = _readModelSqlContext.Account
@@ -53,10 +45,10 @@ namespace AccountingService.Repository.Repositories
            await Task.Run(() => _readModelSqlContext.SaveChanges(true));
         }
 
-        public async Task<Account> GetAccountById(int? transactionAccountId)
+        public async Task<Account?> GetAccountById(int? accountId)
         {
             var account = _readModelSqlContext.Account
-                .Where(x => x.Id == transactionAccountId)
+                .Where(x => x.Id == accountId)
                 .Include(x => x.Transactions);
             return await await Task.FromResult(account.FirstOrDefaultAsync())!;        
         }
