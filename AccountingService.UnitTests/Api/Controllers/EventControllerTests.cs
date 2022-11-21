@@ -13,45 +13,38 @@ using TransactioningService.Api.Controllers;
 
 namespace AccountingService.UnitTests.Api.Controllers;
 
-public class EventControllerTests : IAsyncLifetime
+public class EventControllerTests
 {
     // Given
     private readonly EventController _eventController;
-    private readonly IEventStoreRepository _eventStoreRepository;
+    private readonly Mock<IEventStoreRepository> _eventStoreRepository = new();
     private readonly Mock<IMediator> _mediator = new();
     private readonly EventStore _event;
+    private readonly List<EventStore> _events = new();
+    private readonly GetByAccountId _getByAccountIdRequest;
+    private readonly GetByEventId _getByEventIdRequest;
+    private readonly GetByEventName _getByEventNameRequest;
 
 
     public EventControllerTests()
     {
-        var options = new DbContextOptionsBuilder<EventStoreSqlContext>()
-            .UseInMemoryDatabase(databaseName: "FakeDatabase")
-            .Options;
-        var eventStoreSqlContext = new EventStoreSqlContext(options);
-        _eventStoreRepository = new EventStoreSqlRepository(eventStoreSqlContext);
-        _eventController = new EventController(_eventStoreRepository, _mediator.Object);
+
+        _eventController = new EventController(_eventStoreRepository.Object, _mediator.Object);
 
         var fixture = new Fixture();
-        _event = fixture.Build<EventStore>()
-            .With(x => x.Metadata, "{\"Id\":1}")
-            .With(x => x.EventName, "xpto")
-            .Create();
-    }
-
-    public async Task InitializeAsync()
-    {
-        await _eventStoreRepository.AddEvent(_event);
-        await _eventStoreRepository.Save();
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
+        _event = fixture.Build<EventStore>().Create();
+        _events.Add(_event);
+        _getByAccountIdRequest = fixture.Build<GetByAccountId>().Create();
+        _getByEventIdRequest = fixture.Build<GetByEventId>().With(x => x.Id, _event.EventStoreId.ToString).Create();
+        _getByEventNameRequest = fixture.Build<GetByEventName>().Create();
     }
 
     [Fact]
-    public async void GetAllEventsTest()
+    public async void GetAllEvents_ShouldReturnOk()
     {
+        // Given
+        _eventStoreRepository.Setup(x => x.GetAllEvents()).ReturnsAsync(_events);
+
         // When
         var result = await _eventController.GetAllEvents();
 
@@ -60,38 +53,83 @@ public class EventControllerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async void GetEventByIdTest()
+    public async void GetAllEvents_ShouldGetFromRepository()
     {
         // When
-        var request = new GetByEventId() { Id = _event.EventStoreId.ToString() };
-        var result = await _eventController.GetEventById(request);
+        await _eventController.GetAllEvents();
+
+        // Then
+        _eventStoreRepository.Verify(x => x.GetAllEvents(), Times.Once);
+    }
+
+    [Fact]
+    public async void GetEventById_GivenValidRequest_ShouldReturnOk()
+    {
+        // Given
+        _eventStoreRepository.Setup(x => x.GetEventById(It.IsAny<Guid>())).ReturnsAsync(_event);
+
+        // When
+        var result = await _eventController.GetEventById(_getByEventIdRequest);
 
         // Then
         result.Should().BeOfType<OkObjectResult>();
     }
 
     [Fact]
-    public async void GetEventByAccountIdTest()
+    public async void GetEventById_GivenValidRequest_ShouldGetFromRepository()
     {
-  
         // When
-        var request = new GetByAccountId() { Id = 1 };
-        var result = await _eventController.GetEventByAccountId(request);
+        await _eventController.GetEventById(_getByEventIdRequest);
+
+        // Then
+        _eventStoreRepository.Verify(x => x.GetEventById(It.IsAny<Guid>()), Times.Once);
+    }
+
+    [Fact]
+    public async void GetEventsByAccountId_GivenValidRequest_ShouldReturnOk()
+    {
+
+        // Given
+        _eventStoreRepository.Setup(x => x.GetEventsByAccountId(It.IsAny<int>())).ReturnsAsync(_events);
+
+        // When
+        var result = await _eventController.GetEventByAccountId(_getByAccountIdRequest);
 
         // Then
         result.Should().BeOfType<OkObjectResult>();
     }
 
     [Fact]
-    public async void GetEventByNameTest()
+    public async void GetEventsByAccountId_GivenValidRequest_ShouldGetFromRepository()
     {
-  
         // When
-        var request = new GetByEventName() { EventName = "xpto" };
-        var result = await _eventController.GetEventByName(request);
+        await _eventController.GetEventByAccountId(_getByAccountIdRequest);
+
+        // Then
+        _eventStoreRepository.Verify(x => x.GetEventsByAccountId(It.IsAny<int>()), Times.Once);
+    }
+    
+    [Fact]
+    public async void GetEventsByName_GivenValidRequest_ShouldReturnOk()
+    {
+
+        // Given
+        _eventStoreRepository.Setup(x => x.GetEventsByName(It.IsAny<string>())).ReturnsAsync(_events);
+
+        // When
+        var result = await _eventController.GetEventByName(_getByEventNameRequest);
 
         // Then
         result.Should().BeOfType<OkObjectResult>();
+    }
+
+    [Fact]
+    public async void GetEventsByName_GivenValidRequest_ShouldGetFromRepository()
+    {
+        // When
+        await _eventController.GetEventByName(_getByEventNameRequest);
+
+        // Then
+        _eventStoreRepository.Verify(x => x.GetEventsByName(It.IsAny<string>()), Times.Once);
     }
 }
-
