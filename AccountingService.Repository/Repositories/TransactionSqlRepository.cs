@@ -36,13 +36,13 @@ namespace AccountingService.Repository.Repositories
                 Where(x => x.CreditAccountId == accountId || x.DebitAccountId == accountId).ToList());
         }
         
-        public async Task<IEnumerable<Transaction>> GetCreditTransactionsByAccountId(int accountId)
+        public async Task<IEnumerable<Transaction>> GetTransactionsByCreditAccountId(int accountId)
         {
             return await Task.Run(() => _readModelSqlContext.Transaction.
                 Where(x => x.CreditAccountId == accountId).ToList());
         }
         
-        public async Task<IEnumerable<Transaction>> GetDebitTransactionsByAccountId(int accountId)
+        public async Task<IEnumerable<Transaction>> GetTransactionsByDebitAccountId(int accountId)
         {
             return await Task.Run(() => _readModelSqlContext.Transaction.
                 Where(x => x.DebitAccountId == accountId).ToList());

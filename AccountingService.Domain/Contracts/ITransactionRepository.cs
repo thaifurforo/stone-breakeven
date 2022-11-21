@@ -10,8 +10,8 @@ namespace AccountingService.Domain.Contracts
         Task<Transaction?> GetTransactionById(Guid id);
         Task<Transaction> AddTransaction(Transaction transaction);
         Task<IEnumerable<Transaction>> GetTransactionsByAccountId(int accountId);
-        Task<IEnumerable<Transaction>> GetCreditTransactionsByAccountId(int accountId);
-        Task<IEnumerable<Transaction>> GetDebitTransactionsByAccountId(int accountId);
+        Task<IEnumerable<Transaction>> GetTransactionsByCreditAccountId(int accountId);
+        Task<IEnumerable<Transaction>> GetTransactionsByDebitAccountId(int accountId);
         Task Save();
     }
 }
