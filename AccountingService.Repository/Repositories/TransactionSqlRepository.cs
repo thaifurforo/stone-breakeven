@@ -30,19 +30,19 @@ namespace AccountingService.Repository.Repositories
             return await Task.Run(() => _readModelSqlContext.Transaction.Add(transaction).Entity);
         }
         
-        public async Task<IEnumerable<Transaction>> GetTransactionsByAccount(int accountId)
+        public async Task<IEnumerable<Transaction>> GetTransactionsByAccountId(int accountId)
         {
             return await Task.Run(() => _readModelSqlContext.Transaction.
                 Where(x => x.CreditAccountId == accountId || x.DebitAccountId == accountId).ToList());
         }
         
-        public async Task<IEnumerable<Transaction>> GetCreditTransactionsByAccount(int accountId)
+        public async Task<IEnumerable<Transaction>> GetCreditTransactionsByAccountId(int accountId)
         {
             return await Task.Run(() => _readModelSqlContext.Transaction.
                 Where(x => x.CreditAccountId == accountId).ToList());
         }
         
-        public async Task<IEnumerable<Transaction>> GetDebitTransactionsByAccount(int accountId)
+        public async Task<IEnumerable<Transaction>> GetDebitTransactionsByAccountId(int accountId)
         {
             return await Task.Run(() => _readModelSqlContext.Transaction.
                 Where(x => x.DebitAccountId == accountId).ToList());

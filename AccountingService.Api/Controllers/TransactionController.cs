@@ -53,7 +53,7 @@ public class TransactionController : ControllerBase
     [HttpGet("account/{Id}")]
     public async Task<IActionResult> GetTransactionsByAccount([FromRoute] GetByAccountId request)
     {
-        var transactionsByAccount = await _transactionRepository.GetTransactionsByAccount(request.Id);
+        var transactionsByAccount = await _transactionRepository.GetTransactionsByAccountId(request.Id);
 
         if (transactionsByAccount.IsNullOrEmpty())
         {
@@ -67,7 +67,7 @@ public class TransactionController : ControllerBase
     [HttpGet("credit_account/{Id}")]
     public async Task<IActionResult> GetCreditTransactionsByAccount([FromRoute] GetByAccountId request)
     {
-        var creditTransactionsByAccount = await _transactionRepository.GetCreditTransactionsByAccount(request.Id);
+        var creditTransactionsByAccount = await _transactionRepository.GetCreditTransactionsByAccountId(request.Id);
 
         if (creditTransactionsByAccount.IsNullOrEmpty())
         {
@@ -81,7 +81,7 @@ public class TransactionController : ControllerBase
     [HttpGet("debit_account/{Id}")]
     public async Task<IActionResult> GetDebitTransactionsByAccount([FromRoute] GetByAccountId request)
     {
-        var debitTransactionsByAccount = await _transactionRepository.GetDebitTransactionsByAccount(request.Id);
+        var debitTransactionsByAccount = await _transactionRepository.GetDebitTransactionsByAccountId(request.Id);
 
         if (debitTransactionsByAccount.IsNullOrEmpty())
         {
