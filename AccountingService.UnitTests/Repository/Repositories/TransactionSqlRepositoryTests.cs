@@ -84,13 +84,13 @@ public class TransactionSqlRepositoryTests
     public void GetCreditTransactionsByAccountId_GivenAccountId_ShouldReturnTransactions()
     {
         // Given
-        _repository.Setup(x => x.GetCreditTransactionsByAccountId(It.IsAny<int>())).ReturnsAsync(_transactions);
+        _repository.Setup(x => x.GetTransactionsByCreditAccountId(It.IsAny<int>())).ReturnsAsync(_transactions);
         
         // When
-        var result = _repository.Object.GetCreditTransactionsByAccountId(GenericInt).Result;
+        var result = _repository.Object.GetTransactionsByCreditAccountId(GenericInt).Result;
         
         // Then
-        _repository.Verify(x => x.GetCreditTransactionsByAccountId(It.IsAny<int>()), Times.Once);
+        _repository.Verify(x => x.GetTransactionsByCreditAccountId(It.IsAny<int>()), Times.Once);
         result.Should().BeOfType(typeof(List<Transaction>));
         result.Should().Equal(_transactions);
     }
@@ -99,13 +99,13 @@ public class TransactionSqlRepositoryTests
     public void GetDebitTransactionsByAccountId_GivenAccountId_ShouldReturnTransactions()
     {
         // Given
-        _repository.Setup(x => x.GetDebitTransactionsByAccountId(It.IsAny<int>())).ReturnsAsync(_transactions);
+        _repository.Setup(x => x.GetTransactionsByDebitAccountId(It.IsAny<int>())).ReturnsAsync(_transactions);
         
         // When
-        var result = _repository.Object.GetDebitTransactionsByAccountId(GenericInt).Result;
+        var result = _repository.Object.GetTransactionsByDebitAccountId(GenericInt).Result;
         
         // Then
-        _repository.Verify(x => x.GetDebitTransactionsByAccountId(It.IsAny<int>()), Times.Once);
+        _repository.Verify(x => x.GetTransactionsByDebitAccountId(It.IsAny<int>()), Times.Once);
         result.Should().BeOfType(typeof(List<Transaction>));
         result.Should().Equal(_transactions);
     }
