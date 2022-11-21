@@ -1,4 +1,3 @@
-using AccountingService.Domain.CommandHandlers;
 using AccountingService.Domain.Commands;
 using AccountingService.Domain.Contracts;
 using AccountingService.Domain.Validators.Commands;
