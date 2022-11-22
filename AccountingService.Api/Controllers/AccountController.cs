@@ -35,7 +35,7 @@ namespace AccountingService.Api.Controllers
         }
 
         // GET: api/account/5
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         public async Task<IActionResult> GetAccount([FromRoute] GetByAccountId request)
         {
             var account = await _accountRepository.GetAccountById(request.Id);
@@ -66,7 +66,7 @@ namespace AccountingService.Api.Controllers
         }
 
         // POST: api/account/5/deactivate
-        [HttpPost("{id}/deactivate")]
+        [HttpPost("{Id}/deactivate")]
         public async Task<IActionResult> DeactivateAccount([FromRoute] GetByAccountId request)
         {
             try

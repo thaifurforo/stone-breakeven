@@ -34,7 +34,7 @@ namespace TransactioningService.Api.Controllers
         }
 
         // GET: api/event/id/5
-        [HttpGet("id/{id}")]
+        [HttpGet("id/{Id}")]
         public async Task<IActionResult> GetEventById([FromRoute] GetByEventId request)
         {
             var eventId = Guid.Parse(request.Id);
@@ -62,7 +62,7 @@ namespace TransactioningService.Api.Controllers
         }
         
         // GET: api/event/name/CreatedAccountEvent
-        [HttpGet("name/{eventName}")]
+        [HttpGet("name/{EventName}")]
         public async Task<IActionResult> GetEventByName([FromRoute] GetByEventName request)
         {
             var events = await _eventStoreRepository.GetEventsByName(request.EventName);

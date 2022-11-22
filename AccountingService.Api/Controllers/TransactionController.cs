@@ -35,7 +35,7 @@ public class TransactionController : ControllerBase
     }
 
     // GET: api/transaction/id/5
-    [HttpGet("id/{id}")]
+    [HttpGet("id/{Id}")]
     public async Task<IActionResult> GetTransactionById([FromRoute] GetByTransactionId request)
     {
         var transactionId = Guid.Parse(request.Id);
