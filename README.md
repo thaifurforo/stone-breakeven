@@ -3,6 +3,8 @@ This project was developed as a part of my breakeven as a Jr. Software Engineer 
 
 The challenge was to implement an Account Management App (WebApi).
 
+The project uses Hexagonal Architecture and the following patterns: CQRS, Mediator and Repository.
+
 # API Documentation
 
 ## How to run locally
@@ -31,3 +33,5 @@ git clone git@github.com:thaifurforo/stone-breakeven.git
 
 [Or click here to access the Json to run in Postman](https://www.getpostman.com/collections/55c9b460d2172a927b73)
 
+## API Reference
+[Click here to access the API Reference Documentation](https://breakeven-thaifurforo.readme.io/)
