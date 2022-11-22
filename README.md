@@ -28,10 +28,10 @@ git clone git@github.com:thaifurforo/stone-breakeven.git
 ### Setting up the database
 1. Create two new Schemas on your local server: ``AccountEventStoreDb`` and ``AccountReadModelDb``
 
-## Functional tests
+## Postman Collection
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/55c9b460d2172a927b73?action=collection%2Fimport)
 
-[Or click here to access the Json to run in Postman](https://www.getpostman.com/collections/55c9b460d2172a927b73)
+[Or click here to access the Collection Json](https://www.getpostman.com/collections/55c9b460d2172a927b73)
 
 ## API Reference
 [Click here to access the API Reference Documentation](https://breakeven-thaifurforo.readme.io/)
