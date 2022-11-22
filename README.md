@@ -15,7 +15,7 @@ The project uses Hexagonal Architecture and the following patterns: CQRS, Mediat
 git clone git@github.com:thaifurforo/stone-breakeven.git
 ```
 ### Configuring local variables
-1. Rename the file ``launchSettings_sample.json`` located at ``src/AccountingService.Api/Properties/`` to ``launchSettings.json``
+1. Rename the file ``launchSettings_sample.json`` located at ``src/AccountManagementService.Api/Properties/`` to ``launchSettings.json``
 2. Replace the ``https_port`` and ``http_port`` inside the curly brackets to an available port
 ```sh
 "applicationUrl": "https://localhost:{https_port};http://localhost:{http_port}",
