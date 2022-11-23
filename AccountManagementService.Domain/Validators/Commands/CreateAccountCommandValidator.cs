@@ -16,7 +16,7 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
             .WithMessage("The Agency must have 3 digits")
 
             .Must(x => int.TryParse(x, out var val) && val > 0)
-            .WithMessage("Invalid Agency number");
+            .WithMessage("The Agency should only have numbers");
 
 
         RuleFor(x => x.Document)

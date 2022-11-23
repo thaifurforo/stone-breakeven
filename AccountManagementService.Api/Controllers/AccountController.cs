@@ -76,6 +76,10 @@ namespace AccountManagementService.Api.Controllers
 
                 return new OkObjectResult(result) { StatusCode = StatusCodes.Status201Created };
             }
+            catch (NullReferenceException ex)
+            {
+                return new NotFoundObjectResult(ex.Message);
+            }
             catch (Exception ex)
             {
                 return new BadRequestObjectResult(ex.Message);

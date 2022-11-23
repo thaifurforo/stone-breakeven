@@ -34,6 +34,11 @@ public class DeactivateAccountCommandHandler : IRequestHandler<DeactivateAccount
             return await Task.FromResult(account);
 
         }
+        catch (NullReferenceException ex)
+        {
+            await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
+            throw new NullReferenceException($"There's been an error on the deactivation of the account: AccountId doesn't exist on the database");
+        }
         catch (Exception ex)
         {
             await _mediator.Publish(new ErrorEvent { Exception = ex.Message, ErrorPile = ex.StackTrace });
