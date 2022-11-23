@@ -20,18 +20,18 @@ git clone git@github.com:thaifurforo/stone-breakeven.git
 ```sh
 "applicationUrl": "https://localhost:{https_port};http://localhost:{http_port}",
 ```
-3. Replace the variables ``localhost,port``, ``localhost_user`` and ``localhost_password`` inside the curly brackets according to your local environment variables:
+3. Replace the variables ``localhost_user`` and ``localhost_password`` inside the curly brackets according to your local environment variables:
 ```sh
-"ConnectionStrings__ReadModelSqlConnection": "Server={localhost,port};Initial Catalog=AccountReadModelDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True",
-"ConnectionStrings__EventStoreSqlConnection": "Server={localhost,port};Initial Catalog=AccountEventStoreDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True"
+"ConnectionStrings__ReadModelSqlConnection": "Server=localhost;Initial Catalog=AccountReadModelDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True",
+"ConnectionStrings__EventStoreSqlConnection": "Server=localhost;Initial Catalog=AccountEventStoreDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True"
 ```
 ### Setting up the database
 1. Create two new Schemas on your local server: ``AccountEventStoreDb`` and ``AccountReadModelDb``
 
-## Functional tests
+## Postman Collection
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/55c9b460d2172a927b73?action=collection%2Fimport)
 
-[Or click here to access the Json to run in Postman](https://www.getpostman.com/collections/55c9b460d2172a927b73)
+[Or click here to access the Collection Json](https://www.getpostman.com/collections/55c9b460d2172a927b73)
 
 ## API Reference
 [Click here to access the API Reference Documentation](https://breakeven-thaifurforo.readme.io/)
