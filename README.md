@@ -1,7 +1,7 @@
 # Breakeven | .Net Jr Software Engineer @ Stone
 This project was developed as a part of my breakeven as a Jr. Software Engineer on Credit's Team at Stone.
 
-The challenge was to implement an Account Management App (WebApi).
+The challenge was to implement an Account Management App (WebApi), where it should be possible to create and deactivate accounts and make transactions.
 
 The project uses Hexagonal Architecture and the following patterns: CQRS, Mediator and Repository.
 
