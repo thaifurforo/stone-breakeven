@@ -1,0 +1,5 @@
+**/obj/
+**/.idea/
+**/.git/
+**/bin/
+**/launchSettings.json
