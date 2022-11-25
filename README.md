@@ -16,14 +16,19 @@ git clone git@github.com:thaifurforo/stone-breakeven.git
 ```
 ### Configuring local variables
 1. Rename the file ``launchSettings_sample.json`` located at ``src/AccountManagementService.Api/Properties/`` to ``launchSettings.json``
-2. Replace the ``https_port`` and ``http_port`` inside the curly brackets to an available port
+2. Replace the following variables:
 ```sh
-"applicationUrl": "https://localhost:{https_port};http://localhost:{http_port}",
+"applicationUrl": "{api_iis_url}",
+"sslPort": "{sslPort}"
+...
+"applicationUrl": "{api_url}",
 ```
-3. Replace the variables ``localhost_user`` and ``localhost_password`` inside the curly brackets according to your local environment variables:
+3. Add the connection strings to AccountEventStoreDb and AccountReadModelDb into the environment variables:
 ```sh
-"ConnectionStrings__ReadModelSqlConnection": "Server=localhost;Initial Catalog=AccountReadModelDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True",
-"ConnectionStrings__EventStoreSqlConnection": "Server=localhost;Initial Catalog=AccountEventStoreDb;Persist Security Info=False;User ID={localhost_user};Password={localhost_password};TrustServerCertificate=True"
+"environmentVariables": {
+       "ConnectionStrings__ReadModelSqlConnection": "{readmodel_connectionstring}",
+       "ConnectionStrings__EventStoreSqlConnection": "{eventstore_connectionstring}"
+      }
 ```
 ### Setting up the database
 1. Create two new Schemas on your local server: ``AccountEventStoreDb`` and ``AccountReadModelDb``
