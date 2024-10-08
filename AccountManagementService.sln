@@ -9,6 +9,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{057462C3-5CFB-4758-91C1-5004F9AE7E85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B2D63D59-76E1-45B7-B84C-619E2251506E}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+		.dockerignore = .dockerignore
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountManagementService.UnitTests", "AccountManagementService.UnitTests\AccountManagementService.UnitTests.csproj", "{2D582000-C24F-4D4F-A768-D155C49422B9}"
 EndProject

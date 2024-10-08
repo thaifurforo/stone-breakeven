@@ -4,23 +4,25 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>AccountManagementService.Api</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0"/>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AccountManagementService.Repository\AccountManagementService.Repository.csproj" />
+        <ProjectReference Include="..\AccountManagementService.Repository\AccountManagementService.Repository.csproj"/>
+        <ProjectReference Include="..\AccountManagementService.Domain\AccountManagementService.Domain.csproj"/>
+
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="Properties\launchSettings.json" />
+        <Content Include="Properties\launchSettings.json"/>
     </ItemGroup>
 
 </Project>
